@@ -16,6 +16,7 @@ import ScanResult from './pages/ScanResult';
 import Community from './pages/Community'; // <-- IMPORT BARU
 import HistoryDetail from './pages/HistoryDetail';
 import CommunityDetail from './pages/CommunityDetail';
+import LandingPage from './pages/LandingPage';
 
 // Placeholder untuk halaman Favorites yang belum kita buat
 const Placeholder = ({ title }) => <div className="p-6 text-center text-gray-500 mt-20">{title} Page (Coming Soon)</div>;
@@ -33,7 +34,7 @@ function App() {
 
       <Routes>
         {/* Rute Publik */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/setup-profile" element={<ProfileSetup />} />
