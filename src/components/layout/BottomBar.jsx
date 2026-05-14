@@ -3,48 +3,60 @@ import { Home, Clock, Scan, Heart, User } from "lucide-react";
 
 const BottomBar = () => {
   return (
-    // Tambahan rounded-t-3xl biar ujung atasnya agak membulat manis
-    <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-gray-100 pb-safe z-50 rounded-t-3xl shadow-[0_-10px_40px_rgba(0,0,0,0.08)]">
-      {/* Pake grid-cols-5 agar 5 menu terbagi SANGAT RATA (masing-masing 20%) */}
-      <div className="grid grid-cols-5 max-w-md mx-auto h-16 relative">
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 z-50 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+      <div className="pointer-events-auto rounded-[2rem] border border-white/80 bg-white/92 shadow-[0_-18px_50px_rgba(15,23,42,0.12)] backdrop-blur-xl">
+        <div className="relative mx-auto grid h-[4.6rem] max-w-md grid-cols-5">
         <NavItem to="/home" icon={<Home size={24} />} label="Home" />
         <NavItem to="/history" icon={<Clock size={24} />} label="History" />
 
-        {/* Center FAB (Floating Action Button) - DIJAMIN CENTER */}
         <div className="flex justify-center h-full w-full relative">
           <NavLink
             to="/scanner"
             className={({ isActive }) =>
-              `absolute -top-6 flex items-center justify-center w-16 h-16 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105 active:scale-95 border-4 border-white ${
+              `absolute -top-6 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full border-[6px] border-white shadow-[0_20px_40px_rgba(16,185,129,0.32)] transition-all duration-200 hover:scale-[1.04] active:scale-95 ${
                 isActive
-                  ? "bg-teal-700 shadow-teal-600/40"
-                  : "bg-teal-600 shadow-slate-300"
+                  ? "bg-[linear-gradient(135deg,#0f766e_0%,#10b981_52%,#22c55e_100%)]"
+                  : "bg-[linear-gradient(135deg,#14b8a6_0%,#10b981_54%,#22c55e_100%)]"
               }`
             }
           >
-            <Scan size={28} className="text-white" />
+            <Scan size={28} className="text-white drop-shadow-sm" />
           </NavLink>
         </div>
 
         <NavItem to="/community" icon={<Heart size={24} />} label="Community" />
         <NavItem to="/profile" icon={<User size={24} />} label="Profile" />
+        </div>
       </div>
     </div>
   );
 };
 
-const NavItem = ({ to, icon, label }) => (
-  <NavLink
-    to={to}
-    className={({ isActive }) =>
-      `flex flex-col items-center justify-center gap-1 transition-colors h-full w-full ${
-        isActive ? "text-teal-600" : "text-slate-400 hover:text-slate-600"
-      }`
-    }
-  >
-    {icon}
-    <span className="text-[10px] font-medium">{label}</span>
-  </NavLink>
-);
+const NavItem = ({ to, icon, label }) => {
+  return (
+    <NavLink to={to} className="group flex h-full w-full items-center justify-center">
+      {({ isActive }) => (
+        <div className="flex flex-col items-center justify-center gap-1.5">
+          <div
+            className={`rounded-2xl p-2 transition-all duration-200 ${
+              isActive
+                ? "bg-emerald-50 text-emerald-700 shadow-[0_10px_24px_rgba(16,185,129,0.12)]"
+                : "text-slate-400 group-hover:bg-slate-50 group-hover:text-slate-700"
+            }`}
+          >
+            {icon}
+          </div>
+          <span
+            className={`text-[10px] font-semibold tracking-[0.01em] ${
+              isActive ? "text-emerald-700" : "text-slate-500"
+            }`}
+          >
+            {label}
+          </span>
+        </div>
+      )}
+    </NavLink>
+  );
+};
 
 export default BottomBar;

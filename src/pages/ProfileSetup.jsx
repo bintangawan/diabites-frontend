@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { useUser } from '../context/UserContext';
+import { useUser } from '../context/UserContext.jsx';
 import { Input } from '../components/common/Input';
 import { Button } from '../components/common/Button';
 

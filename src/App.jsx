@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { useLayoutEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
 // Layout
@@ -17,20 +18,45 @@ import Community from './pages/Community'; // <-- IMPORT BARU
 import HistoryDetail from './pages/HistoryDetail';
 import CommunityDetail from './pages/CommunityDetail';
 import LandingPage from './pages/LandingPage';
+import PWAInstallPrompt from './components/common/PWAInstallPrompt';
 
-// Placeholder untuk halaman Favorites yang belum kita buat
-const Placeholder = ({ title }) => <div className="p-6 text-center text-gray-500 mt-20">{title} Page (Coming Soon)</div>;
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+
+    const appScroll = document.querySelector('[data-app-scroll="true"]');
+    if (appScroll) {
+      appScroll.scrollTop = 0;
+    }
+  }, [pathname]);
+
+  return null;
+};
 
 function App() {
   return (
     <>
+      <ScrollToTop />
+
       <Toaster 
         position="top-center"
         toastOptions={{
-          style: { fontFamily: 'Poppins, sans-serif', borderRadius: '12px' },
-          success: { iconTheme: { primary: '#16a34a', secondary: '#fff' } },
+          style: {
+            fontFamily: 'Poppins, sans-serif',
+            borderRadius: '16px',
+            background: '#ffffff',
+            color: '#0f172a',
+            boxShadow: '0 18px 45px rgba(15, 23, 42, 0.12)',
+          },
+          success: { iconTheme: { primary: '#10b981', secondary: '#fff' } },
         }}
       />
+
+      <PWAInstallPrompt />
 
       <Routes>
         {/* Rute Publik */}

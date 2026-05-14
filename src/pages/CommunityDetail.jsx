@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeft, Heart, MessageCircle, Send, Share2, MoreHorizontal } from 'lucide-react';
 
 const CommunityDetail = () => {

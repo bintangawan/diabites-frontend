@@ -1,517 +1,860 @@
-import { Link } from 'react-router-dom';
-import { Activity, Scan, HeartPulse, Users, ArrowRight, ShieldCheck, Camera, Sparkles, CheckCircle2, TrendingDown, Quote, EyeOff, Calculator, AlertTriangle, BarChart3, BadgeCheck, Star } from 'lucide-react';
+import { Link } from "react-router-dom";
+import {
+  ArrowRight,
+  BadgeCheck,
+  BarChart3,
+  Camera,
+  CheckCircle2,
+  Edit2,
+  HeartPulse,
+  Mail,
+  MapPin,
+  MessageCircle,
+  RefreshCw,
+  Scan,
+  ShieldCheck,
+  Sparkles,
+  Users,
+} from "lucide-react";
+import BrandLogo from "../components/common/BrandLogo";
+
+const heroHighlights = [
+  "Scan label makanan atau minuman dalam beberapa detik.",
+  "Lihat hasil analisis dengan susunan yang mudah dibaca.",
+  "Edit manual jika hasil baca label perlu dikoreksi.",
+  "Gunakan komunitas untuk berbagi pengalaman harian.",
+];
+
+const valueCards = [
+  {
+    icon: Camera,
+    title: "Cepat dipakai saat belanja",
+    description:
+      "Buka scanner, arahkan ke label, lalu cek informasi penting tanpa perlu membaca tabel kecil terlalu lama.",
+  },
+  {
+    icon: BarChart3,
+    title: "Ringkasan lebih jelas",
+    description:
+      "Informasi seperti gula, kalori, karbohidrat, lemak, dan natrium disusun agar lebih mudah dipahami.",
+  },
+  {
+    icon: Users,
+    title: "Ada ruang berbagi",
+    description:
+      "Pengguna dapat berbagi pengalaman, bertanya, dan saling memberi dukungan lewat komunitas.",
+  },
+];
+
+const featureSections = [
+  {
+    id: "fitur-scan",
+    eyebrow: "Fitur scanner",
+    title: "Scan label makanan atau minuman dengan alur yang sederhana",
+    description:
+      "Tampilan scanner dibuat fokus ke kamera agar label gizi menjadi pusat perhatian. Pengguna cukup mengarahkan kamera, mengambil gambar, lalu melihat hasilnya.",
+    image: "/images/scannerpage.svg",
+    imageAlt: "Tampilan scanner DiaBites",
+    icon: Scan,
+    accent: "from-emerald-100 via-teal-50 to-white",
+    bullets: [
+      "Arahkan kamera ke informasi nilai gizi dan ambil gambar langsung dari aplikasi.",
+      "Cocok untuk membaca produk kemasan seperti minuman, camilan, dan makanan siap santap.",
+      "Membantu pengguna memahami isi label sebelum memilih produk.",
+    ],
+    chips: ["Live camera preview", "Fokus ke label", "Mobile friendly"],
+  },
+  {
+    id: "fitur-analisis",
+    eyebrow: "Hasil analisis",
+    title: "Hasil scan tampil jelas dan tetap bisa diedit manual",
+    description:
+      "Setelah gambar diambil, DiaBites menampilkan ringkasan gizi dalam tampilan yang lebih rapi. Jika ada angka yang kurang sesuai, pengguna tetap bisa melakukan koreksi manual.",
+    image: "/images/analisispage.svg",
+    imageAlt: "Tampilan hasil analisis DiaBites",
+    icon: Edit2,
+    accent: "from-sky-100 via-cyan-50 to-white",
+    bullets: [
+      "Nilai gizi disusun berdasarkan informasi penting agar mudah dibaca.",
+      "Tampilan hasil dibuat ringkas tanpa menghilangkan detail utama.",
+      "Fitur edit manual membantu saat hasil baca label perlu disesuaikan.",
+    ],
+    chips: ["Ringkasan gizi", "Edit manual", "Lebih fleksibel"],
+    reverse: true,
+  },
+  {
+    id: "fitur-komunitas",
+    eyebrow: "Ruang berbagi",
+    title: "Komunitas untuk saling berbagi pengalaman",
+    description:
+      "Selain membantu membaca label, DiaBites menyediakan ruang komunitas agar pengguna dapat berbagi cerita, bertanya, dan saling mendukung dalam menjaga pola konsumsi.",
+    image: "/images/communitypage.svg",
+    imageAlt: "Tampilan komunitas DiaBites",
+    icon: MessageCircle,
+    accent: "from-orange-100 via-amber-50 to-white",
+    bullets: [
+      "Pengguna dapat menulis postingan singkat tentang produk, kebiasaan makan, atau pertanyaan sehari-hari.",
+      "Komunitas membantu pengguna merasa lebih didukung dalam menjaga pola konsumsi.",
+      "DiaBites tidak hanya menjadi alat scan, tetapi juga ruang berbagi yang ringan digunakan.",
+    ],
+    chips: ["Diskusi ringan", "Saling dukung", "Berbagi pengalaman"],
+  },
+];
+
+const workflowSteps = [
+  {
+    icon: Camera,
+    title: "Buka scanner",
+    description:
+      "Arahkan kamera ke label makanan atau minuman yang ingin dicek.",
+  },
+  {
+    icon: RefreshCw,
+    title: "Tunggu analisis",
+    description:
+      "DiaBites membaca informasi penting dari label dan menyusunnya menjadi ringkasan.",
+  },
+  {
+    icon: Edit2,
+    title: "Koreksi bila perlu",
+    description:
+      "Jika ada angka yang perlu diperbaiki, edit manual bisa dilakukan dengan cepat.",
+  },
+  {
+    icon: Users,
+    title: "Bagikan pengalaman",
+    description:
+      "Gunakan komunitas untuk bertanya, berdiskusi, atau berbagi pengalaman.",
+  },
+];
+
+const trustCards = [
+  {
+    icon: ShieldCheck,
+    title: "Lebih yakin saat memilih produk",
+    description:
+      "Informasi gizi yang biasanya kecil di kemasan disusun ulang agar lebih nyaman dibaca sebelum membeli atau mengonsumsi produk.",
+  },
+  {
+    icon: HeartPulse,
+    title: "Dirancang untuk penggunaan harian",
+    description:
+      "Mulai dari scan cepat sampai ruang komunitas, seluruh alur dibuat ringan untuk digunakan di mobile maupun desktop.",
+  },
+  {
+    icon: CheckCircle2,
+    title: "Tetap bisa disesuaikan",
+    description:
+      "Hasil scan dapat diperiksa kembali dan dikoreksi jika terdapat bagian label yang belum terbaca dengan tepat.",
+  },
+];
 
 const LandingPage = () => {
   return (
-    <div className="min-h-screen bg-slate-50 font-sans selection:bg-teal-200 selection:text-teal-900 overflow-x-hidden">
-      
-      {/* ==================================
-          NAVBAR
-          ================================== */}
-      <nav className="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 transition-all">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3 text-teal-600">
-            <Activity size={28} strokeWidth={2.5} />
-            <span className="font-bold text-xl tracking-tight text-slate-900">DiaBites</span>
-            <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 text-teal-700 text-xs font-bold border border-teal-100">
-              <BadgeCheck size={14} />
-              Asisten Gizi Cerdas
-            </span>
+    <div className="min-h-screen overflow-x-hidden bg-[#f7fbf8] font-sans text-slate-900 selection:bg-emerald-200 selection:text-emerald-950">
+      <div className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-[42rem] bg-[radial-gradient(circle_at_top_left,rgba(52,211,153,0.24),transparent_34%),radial-gradient(circle_at_top_right,rgba(125,211,252,0.22),transparent_32%)]" />
+
+      <nav className="fixed inset-x-0 top-0 z-50 border-b border-white/70 bg-white/80 backdrop-blur-xl">
+        <div className="mx-auto flex h-16 w-[90%] max-w-7xl items-center justify-between gap-4">
+          <Link to="/" className="flex items-center gap-3">
+            <BrandLogo
+              className="h-10 w-[9.75rem] sm:w-[10.5rem]"
+              imageClassName="scale-[1.72]"
+              priority
+            />
+          </Link>
+
+          <div className="hidden items-center gap-7 text-sm font-semibold text-slate-600 md:flex">
+            <a
+              href="#fitur"
+              className="transition-colors hover:text-emerald-700"
+            >
+              Fitur
+            </a>
+            <a
+              href="#alur"
+              className="transition-colors hover:text-emerald-700"
+            >
+              Alur
+            </a>
+            <a
+              href="#komunitas"
+              className="transition-colors hover:text-emerald-700"
+            >
+              Komunitas
+            </a>
           </div>
-          <div className="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
-            <a href="#fitur" className="hover:text-teal-600 transition-colors">Fitur</a>
-            <a href="#cara-kerja" className="hover:text-teal-600 transition-colors">Cara Kerja</a>
-            <a href="#testimoni" className="hover:text-teal-600 transition-colors">Testimoni</a>
-          </div>
-          <div className="flex items-center gap-4 sm:gap-6">
-            <Link to="/login" className="text-sm font-medium text-slate-600 hover:text-teal-600 transition-colors">Masuk</Link>
-            <Link to="/register" className="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-sm font-bold rounded-full shadow-md shadow-teal-600/20 transition-all active:scale-95">
+
+          <div className="flex items-center gap-3">
+            <Link
+              to="/login"
+              className="hidden text-sm font-semibold text-slate-600 transition-colors hover:text-emerald-700 sm:inline-flex"
+            >
+              Masuk
+            </Link>
+            <Link
+              to="/register"
+              className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#0f766e_0%,#10b981_52%,#22c55e_100%)] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_16px_36px_rgba(16,185,129,0.24)] transition hover:-translate-y-0.5 active:scale-[0.98]"
+            >
               Daftar Gratis
             </Link>
           </div>
         </div>
       </nav>
 
-      {/* ==================================
-          SECTION 1: HERO (HOOK UTAMA)
-          ================================== */}
-      <section id="beranda" className="relative pt-32 pb-20 px-6 max-w-6xl mx-auto">
-        {/* Background Blob untuk meramaikan */}
-        <div className="absolute inset-0 -z-10 opacity-60" style={{ backgroundImage: 'radial-gradient(rgba(45,212,191,0.18) 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
-        <div className="absolute top-20 right-0 w-96 h-96 bg-teal-200/40 rounded-full blur-3xl -z-10 mix-blend-multiply"></div>
-        <div className="absolute top-40 left-10 w-72 h-72 bg-amber-200/30 rounded-full blur-3xl -z-10 mix-blend-multiply"></div>
-
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+      <section
+        id="beranda"
+        className="mx-auto w-[90%] max-w-7xl pb-20 pt-28 lg:pb-24 lg:pt-32"
+      >
+        <div className="grid items-center gap-14 lg:grid-cols-[1.02fr_0.98fr]">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-100 text-teal-700 text-sm font-bold mb-6 shadow-sm">
-              <Sparkles size={16} className="text-amber-500" />
-              DiaBites — Eat Wiser, Live Better.
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white/82 px-4 py-2 text-sm font-semibold text-emerald-700 shadow-sm">
+              <Sparkles size={16} className="text-orange-500" />
+              Baca label gizi dengan lebih cepat dan jelas
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.1] mb-6 tracking-tight">
-              Pilih Makanan Tepat, <br className="hidden sm:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-emerald-500">Tanpa Pusing</span> Baca Label.
+
+            <h1 className="mt-6 text-4xl font-bold leading-[1.05] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+              Pahami label makanan tanpa harus menebak-nebak.
             </h1>
-            <p className="text-lg text-slate-600 mb-6 leading-relaxed max-w-lg">
-              Berhenti menebak-nebak! DiaBites adalah asisten pribadi berbasis AI yang membantu Anda—para pejuang diabetes—memahami nilai gizi dengan cepat dan jelas.
+
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-600">
+              DiaBites membantu pengguna membaca informasi gizi pada makanan dan
+              minuman, melihat ringkasan yang lebih mudah dipahami, serta
+              berbagi pengalaman melalui komunitas.
             </p>
-            <div className="grid sm:grid-cols-2 gap-3 text-sm text-slate-600 mb-8">
-              <div className="flex items-start gap-2">
-                <CheckCircle2 size={18} className="text-teal-600 mt-0.5" />
-                <span>Scan label hanya dengan kamera ponsel.</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle2 size={18} className="text-teal-600 mt-0.5" />
-                <span>Rekomendasi aman sesuai profil Anda.</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle2 size={18} className="text-teal-600 mt-0.5" />
-                <span>Hitung karbo, gula, dan kalori otomatis.</span>
-              </div>
-              <div className="flex items-start gap-2">
-                <CheckCircle2 size={18} className="text-teal-600 mt-0.5" />
-                <span>Riwayat konsumsi rapi dan mudah dilacak.</span>
-              </div>
+
+            <div className="mt-7 grid gap-3 sm:grid-cols-2">
+              {heroHighlights.map((item) => (
+                <div
+                  key={item}
+                  className="flex items-start gap-3 rounded-2xl border border-white/80 bg-white/78 px-4 py-3 shadow-[0_10px_24px_rgba(15,23,42,0.05)] backdrop-blur-sm"
+                >
+                  <div className="mt-0.5 rounded-full bg-emerald-100 p-1 text-emerald-700">
+                    <CheckCircle2 size={14} />
+                  </div>
+                  <p className="text-sm leading-relaxed text-slate-600">
+                    {item}
+                  </p>
+                </div>
+              ))}
             </div>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/register" className="flex items-center justify-center gap-2 px-8 py-4 bg-teal-600 hover:bg-teal-700 text-white text-base font-bold rounded-full transition-all group shadow-lg shadow-teal-600/25">
-                Coba Scan Sekarang <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+              <Link
+                to="/register"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#0f766e_0%,#10b981_52%,#22c55e_100%)] px-8 py-4 text-base font-semibold text-white shadow-[0_20px_40px_rgba(16,185,129,0.24)] transition hover:-translate-y-0.5 active:scale-[0.98]"
+              >
+                Coba DiaBites Sekarang
+                <ArrowRight size={18} />
               </Link>
-              <a href="#cara-kerja" className="flex items-center justify-center gap-2 px-8 py-4 bg-white text-slate-800 text-base font-bold rounded-full border border-slate-200 hover:border-teal-300 hover:text-teal-700 transition-all">
-                Lihat Cara Kerja
+
+              <a
+                href="#fitur"
+                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/88 px-8 py-4 text-base font-semibold text-slate-700 shadow-sm transition-colors hover:border-emerald-300 hover:text-emerald-700"
+              >
+                Lihat fitur utama
               </a>
             </div>
-            <div className="mt-8 grid grid-cols-3 gap-3 max-w-md">
-              <div className="rounded-2xl bg-white/80 border border-slate-100 px-4 py-3 text-center shadow-sm">
-                <div className="text-lg font-extrabold text-slate-900">3 Langkah</div>
-                <div className="text-[11px] text-slate-500">Proses Sederhana</div>
-              </div>
-              <div className="rounded-2xl bg-white/80 border border-slate-100 px-4 py-3 text-center shadow-sm">
-                <div className="text-lg font-extrabold text-slate-900">Scan Sekali</div>
-                <div className="text-[11px] text-slate-500">Hasil Langsung</div>
-              </div>
-              <div className="rounded-2xl bg-white/80 border border-slate-100 px-4 py-3 text-center shadow-sm">
-                <div className="text-lg font-extrabold text-slate-900">Aman Jelas</div>
-                <div className="text-[11px] text-slate-500">Tanpa Tebak-tebakan</div>
-              </div>
-            </div>
-            <div className="mt-6 flex flex-wrap items-center gap-3 text-xs text-slate-500">
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 border border-slate-100">
-                <ShieldCheck size={14} className="text-teal-600" />
-                Privasi data terjaga
-              </span>
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 border border-slate-100">
-                <BadgeCheck size={14} className="text-teal-600" />
-                Rekomendasi ramah diabetes
-              </span>
+
+            <div className="mt-8 grid max-w-xl gap-3 sm:grid-cols-3">
+              <InfoStat label="1 aplikasi" value="Scan, analisis, komunitas" />
+              <InfoStat label="3 langkah" value="Foto, cek, pahami" />
+              <InfoStat label="Fleksibel" value="Bisa edit manual" />
             </div>
           </div>
 
-          {/* Kanan: Mockup UI + Ilustrasi Kesehatan */}
-          <div className="relative w-full max-w-lg mx-auto lg:ml-auto">
-            <div className="absolute -top-16 -right-10 w-48 h-48 bg-emerald-200/50 rounded-full blur-3xl -z-10"></div>
-            <div className="absolute -bottom-10 -left-10 w-44 h-44 bg-amber-200/40 rounded-full blur-3xl -z-10"></div>
+          <div className="relative mx-auto w-full max-w-2xl">
+            <div className="absolute -left-12 top-12 h-56 w-56 rounded-full bg-emerald-200/60 blur-3xl" />
+            <div className="absolute -right-10 bottom-8 h-56 w-56 rounded-full bg-sky-200/60 blur-3xl" />
 
-            <div className="relative">
-              <div className="relative bg-white p-4 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border-8 border-slate-50 transform rotate-[-3deg] hover:rotate-0 transition-transform duration-500">
-                <div className="w-full bg-slate-50 rounded-2xl overflow-hidden border border-slate-100">
-                  <div className="bg-white px-4 py-4 border-b border-slate-100 flex items-center justify-between">
-                    <div className="font-bold text-slate-900 text-sm flex items-center gap-2"><Activity size={16} className="text-teal-600"/> Hasil Analisis</div>
-                    <span className="text-[10px] font-bold text-teal-700 bg-teal-50 border border-teal-100 px-2 py-1 rounded-full">AI Scan</span>
-                  </div>
-                  <div className="h-36 bg-slate-800 relative overflow-hidden flex items-center justify-center">
-                    <Scan size={40} className="text-teal-400" />
-                    <div className="absolute top-0 left-0 w-full h-1 bg-teal-400 shadow-[0_0_15px_rgba(45,212,191,1)] animate-[ping_3s_ease-in-out_infinite]"></div>
-                  </div>
-                  <div className="p-5 space-y-4">
-                    <div className="p-3 bg-rose-50 border border-rose-100 rounded-xl flex gap-3">
-                      <ShieldCheck size={20} className="text-rose-600 shrink-0" />
-                      <div>
-                        <div className="text-sm font-bold text-rose-900">Not Recommended</div>
-                        <div className="text-[10px] text-rose-700 mt-0.5">Kadar gula (24g) melebihi batas aman harian Anda.</div>
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      <div className="h-2.5 w-full bg-slate-200 rounded-full overflow-hidden"><div className="h-full bg-blue-500 w-3/4"></div></div>
-                      <div className="h-2.5 w-full bg-slate-200 rounded-full overflow-hidden"><div className="h-full bg-rose-500 w-11/12"></div></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="absolute hidden sm:flex -left-10 -bottom-8 bg-white/90 backdrop-blur border border-slate-100 rounded-2xl px-4 py-3 shadow-lg items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-700">
-                  <HeartPulse size={18} />
-                </div>
-                <div>
-                  <div className="text-xs font-bold text-slate-900">Gula Harian</div>
-                  <div className="text-[10px] text-slate-500">Terkontrol</div>
-                  <div className="mt-1 h-1.5 w-24 bg-slate-200 rounded-full overflow-hidden">
-                    <div className="h-full bg-emerald-500 w-3/5"></div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="absolute hidden sm:flex -right-8 top-10 bg-white/90 backdrop-blur border border-slate-100 rounded-2xl px-4 py-3 shadow-lg items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600">
-                  <BarChart3 size={18} />
-                </div>
-                <div>
-                  <div className="text-xs font-bold text-slate-900">Karbo</div>
-                  <div className="text-[10px] text-slate-500">18g per porsi</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 rounded-3xl border border-slate-100 bg-white/80 backdrop-blur p-6 shadow-xl">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600">
-                    <HeartPulse size={22} />
-                  </div>
-                  <div>
-                    <div className="text-sm font-bold text-slate-900">Ilustrasi Kesehatan</div>
-                    <div className="text-xs text-slate-500">Stabil, terukur, aman</div>
-                  </div>
-                </div>
-                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded-full">Live</span>
-              </div>
-              <div className="relative mt-4 h-28 rounded-2xl bg-gradient-to-br from-emerald-50 via-white to-teal-100/60 border border-emerald-100 overflow-hidden">
-                <div className="absolute left-5 top-5 w-14 h-14 bg-white rounded-2xl border border-emerald-100 shadow-sm flex items-center justify-center">
-                  <div className="relative w-8 h-8">
-                    <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-2 bg-emerald-500 rounded-full"></div>
-                    <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-2 bg-emerald-500 rounded-full"></div>
-                  </div>
-                </div>
-                <div className="absolute right-6 top-6 w-20 h-10 bg-white rounded-full border border-slate-100 shadow-sm flex items-center justify-between px-2">
-                  <div className="w-5 h-5 rounded-full bg-emerald-200"></div>
-                  <div className="h-2 w-8 bg-emerald-200 rounded-full"></div>
-                </div>
-                <div className="absolute left-6 bottom-5 w-28 h-10 bg-white rounded-full border border-slate-100 flex items-center gap-2 px-2 shadow-sm">
-                  <div className="w-6 h-6 rounded-full bg-rose-200"></div>
-                  <div className="h-2 w-10 bg-rose-200 rounded-full"></div>
-                  <div className="h-2 w-6 bg-rose-200 rounded-full"></div>
-                </div>
-                <svg className="absolute inset-0" viewBox="0 0 300 120" fill="none" preserveAspectRatio="none">
-                  <path d="M0,70 L60,70 L85,35 L110,90 L140,55 L170,70 L220,70 L245,45 L270,90 L300,70" stroke="#10b981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-              <div className="mt-4 grid grid-cols-3 gap-3 text-center">
-                <div className="rounded-2xl bg-slate-50 border border-slate-100 py-2">
-                  <div className="text-xs font-bold text-slate-900">Gula</div>
-                  <div className="text-[10px] text-slate-500">Terkontrol</div>
-                </div>
-                <div className="rounded-2xl bg-slate-50 border border-slate-100 py-2">
-                  <div className="text-xs font-bold text-slate-900">Karbo</div>
-                  <div className="text-[10px] text-slate-500">Terukur</div>
-                </div>
-                <div className="rounded-2xl bg-slate-50 border border-slate-100 py-2">
-                  <div className="text-xs font-bold text-slate-900">Kalori</div>
-                  <div className="text-[10px] text-slate-500">Seimbang</div>
-                </div>
-              </div>
+            <div className="relative flex items-end justify-center gap-4 px-1 sm:gap-6">
+              <AppPreview
+                src="/images/homepage.svg"
+                alt="Tampilan halaman utama aplikasi DiaBites"
+                className="w-[49%] -rotate-6 sm:w-[45%]"
+              />
+              <AppPreview
+                src="/images/scannerpage.svg"
+                alt="Tampilan scanner DiaBites"
+                className="relative z-10 w-[49%] rotate-6 sm:w-[45%]"
+              />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ==================================
-          SECTION 2: THE PROBLEM (KENAPA DIABITES?)
-          ================================== */}
-      <section id="masalah" className="py-24 bg-white border-y border-slate-100">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-extrabold text-slate-900 mb-6">Sering Kebingungan Saat Belanja?</h2>
-          <p className="text-lg text-slate-600 leading-relaxed mb-12">
-            Informasi gizi di kemasan sering kali ditulis sangat kecil, membingungkan, dan tidak memberitahu apakah produk tersebut <strong>aman untuk kondisi tubuh Anda</strong>. Keputusan yang salah bisa berdampak buruk bagi kadar gula darah. Di sinilah DiaBites hadir sebagai solusi.
-          </p>
-          <div className="grid sm:grid-cols-3 gap-6 text-left">
-            <div className="relative p-6 bg-gradient-to-br from-white to-slate-50 rounded-2xl border border-slate-100 shadow-sm">
-              <div className="absolute top-4 right-4 text-5xl font-extrabold text-slate-100">01</div>
-              <div className="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center text-teal-600 mb-4 shadow-sm">
-                <EyeOff size={20} />
+      <section className="border-y border-emerald-100/70 bg-white/70">
+        <div className="mx-auto grid w-[90%] max-w-7xl gap-4 py-8 lg:grid-cols-3">
+          {valueCards.map(({ icon: Icon, title, description }) => (
+            <div
+              key={title}
+              className="rounded-[2rem] border border-emerald-100/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.88)_0%,rgba(240,253,250,0.76)_100%)] p-6 shadow-sm"
+            >
+              <div className="mb-4 inline-flex rounded-2xl bg-emerald-100 p-3 text-emerald-700">
+                <Icon size={22} />
               </div>
-              <h3 className="font-bold text-slate-900 mb-2">Teks Terlalu Kecil</h3>
-              <p className="text-sm text-slate-500">Susah dibaca dengan cepat saat sedang berbelanja di minimarket.</p>
+              <h2 className="text-xl font-bold text-slate-900">{title}</h2>
+              <p className="mt-3 text-sm leading-relaxed text-slate-600">
+                {description}
+              </p>
             </div>
-            <div className="relative p-6 bg-gradient-to-br from-white to-slate-50 rounded-2xl border border-slate-100 shadow-sm">
-              <div className="absolute top-4 right-4 text-5xl font-extrabold text-slate-100">02</div>
-              <div className="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-600 mb-4 shadow-sm">
-                <Calculator size={20} />
-              </div>
-              <h3 className="font-bold text-slate-900 mb-2">Ribet Hitung Porsi</h3>
-              <p className="text-sm text-slate-500">Angka gizi sering menipu karena tidak dihitung berdasarkan porsi konsumsi aktual.</p>
-            </div>
-            <div className="relative p-6 bg-gradient-to-br from-white to-slate-50 rounded-2xl border border-slate-100 shadow-sm">
-              <div className="absolute top-4 right-4 text-5xl font-extrabold text-slate-100">03</div>
-              <div className="w-12 h-12 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-600 mb-4 shadow-sm">
-                <AlertTriangle size={20} />
-              </div>
-              <h3 className="font-bold text-slate-900 mb-2">Kurang Konteks</h3>
-              <p className="text-sm text-slate-500">Tidak ada peringatan apakah produk tersebut aman untuk tipe diabetes Anda.</p>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* ==================================
-          SECTION 3: HOW IT WORKS (CARA KERJA)
-          ================================== */}
-      <section id="cara-kerja" className="py-24 bg-slate-900 text-white relative overflow-hidden">
-        {/* Dekorasi Background */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-teal-600/20 rounded-full blur-3xl"></div>
-        <div className="max-w-6xl mx-auto px-6 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-extrabold mb-4">Semudah Menghitung 1, 2, 3</h2>
-            <p className="text-slate-400 max-w-xl mx-auto">Tidak perlu input manual yang rumit. DiaBites bekerja secara otomatis untuk Anda.</p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8 relative">
-            {/* Garis penghubung (muncul di layar besar) */}
-            <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-0.5 bg-gradient-to-r from-slate-700 via-teal-500 to-slate-700"></div>
-
-            <div className="relative text-center bg-slate-800/60 border border-slate-700 rounded-3xl p-8 backdrop-blur">
-              <div className="w-24 h-24 mx-auto bg-slate-800 border-4 border-slate-900 rounded-full flex items-center justify-center mb-6 relative z-10 text-teal-400">
-                <Camera size={36} />
-                <div className="absolute -top-2 -right-2 w-8 h-8 bg-teal-500 text-white font-bold rounded-full flex items-center justify-center border-4 border-slate-900">1</div>
-              </div>
-              <h3 className="text-xl font-bold mb-2">Foto Label Gizi</h3>
-              <p className="text-slate-400 text-sm">Arahkan kamera ke tabel informasi nilai gizi di belakang kemasan.</p>
-              <span className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-teal-200 bg-teal-500/10 border border-teal-500/20 px-3 py-1 rounded-full">
-                <Camera size={14} /> Sekali jepret
-              </span>
-            </div>
-
-            <div className="relative text-center bg-slate-800/60 border border-slate-700 rounded-3xl p-8 backdrop-blur">
-              <div className="w-24 h-24 mx-auto bg-slate-800 border-4 border-slate-900 rounded-full flex items-center justify-center mb-6 relative z-10 text-teal-400">
-                <Scan size={36} />
-                <div className="absolute -top-2 -right-2 w-8 h-8 bg-teal-500 text-white font-bold rounded-full flex items-center justify-center border-4 border-slate-900">2</div>
-              </div>
-              <h3 className="text-xl font-bold mb-2">AI Menganalisis</h3>
-              <p className="text-slate-400 text-sm">Teknologi OCR kami secara otomatis membaca teks dan angka pada label.</p>
-              <span className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-teal-200 bg-teal-500/10 border border-teal-500/20 px-3 py-1 rounded-full">
-                <Sparkles size={14} /> Baca otomatis
-              </span>
-            </div>
-
-            <div className="relative text-center bg-slate-800/60 border border-slate-700 rounded-3xl p-8 backdrop-blur">
-              <div className="w-24 h-24 mx-auto bg-slate-800 border-4 border-slate-900 rounded-full flex items-center justify-center mb-6 relative z-10 text-teal-400">
-                <CheckCircle2 size={36} />
-                <div className="absolute -top-2 -right-2 w-8 h-8 bg-teal-500 text-white font-bold rounded-full flex items-center justify-center border-4 border-slate-900">3</div>
-              </div>
-              <h3 className="text-xl font-bold mb-2">Terima Rekomendasi</h3>
-              <p className="text-slate-400 text-sm">Dapatkan status keamanan produk berdasarkan profil kesehatan pribadi Anda.</p>
-              <span className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-teal-200 bg-teal-500/10 border border-teal-500/20 px-3 py-1 rounded-full">
-                <ShieldCheck size={14} /> Aman dan jelas
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ==================================
-          SECTION 4: BENTO GRID FEATURES
-          ================================== */}
-      <section id="fitur" className="py-24 bg-slate-50 border-b border-slate-100">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="mb-12">
-            <h2 className="text-3xl font-extrabold text-slate-900 mb-4">Fitur Lengkap DiaBites</h2>
-            <p className="text-slate-500 max-w-xl">Desain yang ramah pengguna, berpadu dengan teknologi cerdas di balik layar.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[220px]">
-            {/* Box 1 */}
-            <div className="md:col-span-2 md:row-span-2 bg-white rounded-3xl p-8 border border-slate-200 shadow-sm flex flex-col justify-between overflow-hidden relative group hover:border-teal-300 transition-all">
-              <div className="relative z-10 max-w-sm">
-                <div className="w-12 h-12 bg-teal-50 rounded-xl flex items-center justify-center text-teal-600 mb-4">
-                  <HeartPulse size={24} />
-                </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-2">Personalisasi BMR & TDEE</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">Sistem kami menyesuaikan rekomendasi berdasarkan usia, gender, berat badan, serta tipe diabetes Anda untuk akurasi maksimal.</p>
-              </div>
-              <div className="mt-6 grid grid-cols-2 gap-3">
-                <div className="rounded-2xl bg-slate-50 border border-slate-100 p-3">
-                  <div className="text-xs font-bold text-slate-900">Profil Pribadi</div>
-                  <div className="text-[10px] text-slate-500">Lebih relevan</div>
-                </div>
-                <div className="rounded-2xl bg-slate-50 border border-slate-100 p-3">
-                  <div className="text-xs font-bold text-slate-900">Target Harian</div>
-                  <div className="text-[10px] text-slate-500">Lebih terarah</div>
-                </div>
-              </div>
-              <div className="absolute -right-10 -bottom-10 opacity-10 group-hover:opacity-20 transition-opacity duration-500">
-                <HeartPulse size={250} className="text-teal-600" />
-              </div>
-            </div>
-
-            {/* Box 2 */}
-            <div className="md:col-span-2 bg-white rounded-3xl p-8 border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center gap-8 group hover:border-teal-300 transition-all">
-              <div className="flex-1">
-                <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 mb-4">
-                  <Users size={24} />
-                </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-2">Komunitas Pejuang Diabetes</h3>
-                <p className="text-slate-500 text-sm max-w-md">Tidak berjuang sendirian. Bagikan pengalaman, resep camilan rendah gula, dan dapatkan dukungan moral dari pengguna DiaBites lainnya melalui fitur Ruang Berbagi.</p>
-              </div>
-              <div className="w-full sm:w-1/3 h-full bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center p-4">
-                <div className="w-full bg-white p-3 rounded-xl shadow-sm border border-slate-100">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-8 h-8 bg-teal-100 rounded-full"></div>
-                    <div className="h-2 w-20 bg-slate-200 rounded-full"></div>
-                  </div>
-                  <div className="h-2 w-full bg-slate-100 rounded-full mb-1"></div>
-                  <div className="h-2 w-3/4 bg-slate-100 rounded-full"></div>
-                </div>
-              </div>
-            </div>
-
-            {/* Box 3 */}
-            <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
-              <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
-                <Camera size={22} />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">Scan Cepat</h3>
-                <p className="text-xs text-slate-500">Cukup foto label gizi, semua angka terbaca otomatis.</p>
-              </div>
-            </div>
-
-            {/* Box 4 */}
-            <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
-              <div className="w-12 h-12 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600">
-                <ShieldCheck size={22} />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">Peringatan Cerdas</h3>
-                <p className="text-xs text-slate-500">Notifikasi aman/tidak aman langsung terbaca.</p>
-              </div>
-            </div>
-
-            {/* Box 5 */}
-            <div className="md:col-span-2 bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl p-8 flex flex-col border-none relative overflow-hidden text-white shadow-md">
-              <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mb-4">
-                <TrendingDown size={24} />
-              </div>
-              <h3 className="text-xl font-bold mb-2">Pantau Asupan</h3>
-              <p className="text-sm text-white/90">Ketahui secara pasti berapa banyak gula, karbo, dan kalori yang telah masuk.</p>
-              <div className="mt-6 h-2.5 w-full bg-white/30 rounded-full overflow-hidden">
-                <div className="h-full bg-white/80 w-2/3"></div>
-              </div>
-            </div>
-
-            {/* Box 6 */}
-            <div className="md:col-span-2 bg-white rounded-3xl p-8 border border-slate-200 shadow-sm flex flex-col justify-between">
-              <div className="w-12 h-12 bg-teal-50 rounded-xl flex items-center justify-center text-teal-600">
-                <BarChart3 size={24} />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Laporan & Riwayat</h3>
-                <p className="text-sm text-slate-500">Lihat tren konsumsi harian dan evaluasi pola makan Anda dengan rapi.</p>
-              </div>
-              <div className="mt-4 flex items-center gap-2 text-xs text-slate-500">
-                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-slate-50 border border-slate-100">Mingguan</span>
-                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-slate-50 border border-slate-100">Bulanan</span>
-                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-slate-50 border border-slate-100">Custom</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ==================================
-          SECTION 5: SOCIAL PROOF / TESTIMONIALS
-          ================================== */}
-      <section id="testimoni" className="py-24 bg-white">
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-extrabold text-slate-900 mb-6">Kata Mereka yang Telah Mencoba</h2>
-          <div className="flex items-center justify-center gap-1 text-amber-500 mb-10">
-            <Star size={18} fill="currentColor" />
-            <Star size={18} fill="currentColor" />
-            <Star size={18} fill="currentColor" />
-            <Star size={18} fill="currentColor" />
-            <Star size={18} fill="currentColor" />
-            <span className="ml-2 text-xs text-slate-500">Umpan balik positif dari komunitas</span>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6 text-left">
-            <div className="p-8 bg-slate-50 rounded-3xl border border-slate-100">
-              <Quote className="text-teal-200 mb-4" size={32} />
-              <p className="text-slate-600 text-sm mb-6 leading-relaxed">"Gak nyangka ternyata biskuit yang biasa saya makan gulanya tinggi banget. Untung sekarang ada DiaBites, tinggal jepret langsung tau aman atau nggak."</p>
-              <div className="font-bold text-slate-900 text-sm">Bapak Anton (52 th)</div>
-              <div className="text-xs text-teal-600 font-medium">Diabetes Tipe 2</div>
-            </div>
-
-            <div className="p-8 bg-slate-50 rounded-3xl border border-slate-100">
-              <Quote className="text-teal-200 mb-4" size={32} />
-              <p className="text-slate-600 text-sm mb-6 leading-relaxed">"Sangat ngebantu buat aku yang diabetes gestasional. Jadi lebih yakin pas mau milih cemilan di supermarket tanpa harus googling sana-sini."</p>
-              <div className="font-bold text-slate-900 text-sm">Ibu Rina (28 th)</div>
-              <div className="text-xs text-teal-600 font-medium">Diabetes Gestasional</div>
-            </div>
-
-            <div className="p-8 bg-slate-50 rounded-3xl border border-slate-100">
-              <Quote className="text-teal-200 mb-4" size={32} />
-              <p className="text-slate-600 text-sm mb-6 leading-relaxed">"Fitur komunitasnya bikin aplikasi ini beda dari yang lain. Bisa saling semangatin dan bagi info makanan yang aman. Keren banget!"</p>
-              <div className="font-bold text-slate-900 text-sm">Dimas (35 th)</div>
-              <div className="text-xs text-teal-600 font-medium">Diabetes Tipe 1</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ==================================
-          SECTION 6: FINAL CTA & FOOTER
-          ================================== */}
-      <section id="cta" className="py-20 px-6 max-w-5xl mx-auto">
-        <div className="relative bg-gradient-to-br from-teal-600 to-emerald-700 rounded-[3rem] p-10 md:p-16 text-center text-white shadow-2xl shadow-teal-600/30 overflow-hidden">
-          <div className="absolute -top-16 -right-16 w-40 h-40 bg-white/20 rounded-full blur-2xl"></div>
-          <div className="absolute bottom-0 left-0 w-56 h-56 bg-emerald-400/30 rounded-full blur-3xl"></div>
-          <div className="relative z-10">
-            <h2 className="text-3xl md:text-4xl font-extrabold mb-6">Siap Menjalani Hidup Lebih Sehat?</h2>
-            <p className="text-teal-100 text-lg mb-8 max-w-2xl mx-auto">
-              Bergabunglah dengan komunitas yang saling mendukung. Jadikan DiaBites asisten harian Anda untuk keputusan konsumsi yang lebih bijak.
+      <section className="mx-auto w-[90%] max-w-7xl py-20 lg:py-24">
+        <div className="grid items-center gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+          <div>
+            <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700">
+              <ShieldCheck size={16} />
+              Ringan digunakan sehari-hari
+            </span>
+            <h2 className="mt-5 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+              Informasi penting dibuat lebih lega dan mudah dibaca.
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
+              Bagian ini dipisahkan dari hero agar tampilan awal tidak padat dan
+              pengguna bisa memahami manfaat DiaBites secara bertahap.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to="/register" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-teal-700 text-lg font-bold rounded-full transition-all hover:scale-105 shadow-xl">
-                Buat Akun Gratis Sekarang
-              </Link>
-              <Link to="/login" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/10 text-white text-lg font-bold rounded-full border border-white/30 hover:bg-white/20 transition-all">
-                Masuk
-              </Link>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-3">
+            {trustCards.map(({ icon: Icon, title, description }) => (
+              <div
+                key={title}
+                className="rounded-[2rem] border border-white/80 bg-white/82 p-6 shadow-[0_18px_44px_rgba(15,23,42,0.06)]"
+              >
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
+                  <Icon size={25} />
+                </div>
+                <h3 className="mt-6 text-lg font-bold leading-7 text-slate-900">
+                  {title}
+                </h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600">
+                  {description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="fitur" className="mx-auto w-[90%] max-w-7xl pb-20 lg:pb-24">
+        <div className="mx-auto mb-14 max-w-3xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700">
+            <BadgeCheck size={16} />
+            Fitur utama DiaBites
+          </span>
+          <h2 className="mt-5 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            Dari scan label sampai komunitas, semuanya berada dalam satu alur.
+          </h2>
+          <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
+            DiaBites membantu pengguna membaca label gizi, memahami hasilnya,
+            dan tetap memiliki ruang untuk saling berbagi pengalaman.
+          </p>
+        </div>
+
+        <div className="space-y-8">
+          {featureSections.map((section) => (
+            <FeatureSplit key={section.id} {...section} />
+          ))}
+        </div>
+      </section>
+
+      <section
+        id="alur"
+        className="border-y border-emerald-100/70 bg-[linear-gradient(180deg,#0f172a_0%,#082f49_100%)] py-20 text-white lg:py-24"
+      >
+        <div className="mx-auto w-[90%] max-w-7xl">
+          <div className="mx-auto max-w-3xl text-center">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 text-sm font-semibold text-emerald-200">
+              <Sparkles size={16} />
+              Alur penggunaan
+            </span>
+            <h2 className="mt-5 text-3xl font-bold tracking-tight sm:text-4xl">
+              Cukup foto label, cek hasilnya, lalu gunakan sesuai kebutuhan.
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-slate-300 sm:text-lg">
+              Alur aplikasi dibuat singkat agar tetap nyaman dipakai saat
+              berbelanja, di rumah, atau ketika membandingkan beberapa produk.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+            {workflowSteps.map(({ icon: Icon, title, description }, index) => (
+              <div
+                key={title}
+                className="rounded-[2rem] border border-white/10 bg-white/6 p-6 shadow-[0_20px_40px_rgba(0,0,0,0.16)] backdrop-blur-sm"
+              >
+                <div className="mb-5 flex items-center justify-between">
+                  <div className="rounded-2xl bg-emerald-400/15 p-3 text-emerald-300">
+                    <Icon size={22} />
+                  </div>
+                  <span className="text-sm font-semibold text-emerald-200/80">
+                    0{index + 1}
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold text-white">{title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-slate-300">
+                  {description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="komunitas"
+        className="mx-auto w-[90%] max-w-7xl py-20 lg:py-24"
+      >
+        <div className="grid items-center gap-10 rounded-[2.6rem] border border-white/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.88)_0%,rgba(240,253,250,0.78)_48%,rgba(239,246,255,0.86)_100%)] p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] lg:grid-cols-[1.02fr_0.98fr] lg:p-10">
+          <div>
+            <span className="inline-flex items-center gap-2 rounded-full bg-sky-50 px-4 py-2 text-sm font-semibold text-sky-700">
+              <Users size={16} />
+              Komunitas
+            </span>
+            <h2 className="mt-5 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+              Ruang berbagi untuk pengguna yang ingin saling mendukung.
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
+              Pengguna dapat berdiskusi tentang kebiasaan makan, pengalaman
+              memilih produk, atau pertanyaan ringan seputar penggunaan
+              aplikasi.
+            </p>
+
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <div className="rounded-[1.8rem] border border-sky-100 bg-white/82 p-4">
+                <p className="text-sm font-bold text-slate-900">
+                  Diskusi lebih ringan
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-500">
+                  Pengguna dapat berbagi cerita singkat tanpa alur yang rumit.
+                </p>
+              </div>
+              <div className="rounded-[1.8rem] border border-emerald-100 bg-white/82 p-4">
+                <p className="text-sm font-bold text-slate-900">
+                  Saling memberi dukungan
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-500">
+                  Komunitas membantu pengguna merasa tidak sendirian dalam
+                  menjaga pola konsumsi.
+                </p>
+              </div>
             </div>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-xs text-teal-100">
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20">
-                <ShieldCheck size={14} />
-                Privasi aman
-              </span>
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20">
-                <Sparkles size={14} />
-                Rekomendasi jelas
-              </span>
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20">
-                <CheckCircle2 size={14} />
-                Mulai gratis
-              </span>
+          </div>
+
+          <div className="relative mx-auto w-full max-w-xl">
+            <div className="absolute -left-6 top-10 h-40 w-40 rounded-full bg-sky-200/60 blur-3xl" />
+            <div className="absolute -right-6 bottom-8 h-40 w-40 rounded-full bg-emerald-200/60 blur-3xl" />
+
+            <div className="relative flex items-end justify-center gap-4">
+              <AppPreview
+                src="/images/analisispage.svg"
+                alt="Tampilan hasil analisis DiaBites"
+                className="w-[46%] -rotate-6"
+              />
+              <AppPreview
+                src="/images/communitypage.svg"
+                alt="Tampilan komunitas DiaBites"
+                className="relative z-10 w-[46%] rotate-6"
+              />
             </div>
           </div>
         </div>
       </section>
 
-      <footer className="bg-white py-8 border-t border-slate-100 mt-10">
-        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-2 text-teal-600">
-            <Activity size={24} strokeWidth={2.5} />
-            <span className="font-bold text-lg text-slate-900">DiaBites</span>
-          </div>
-          <div className="flex items-center gap-4 text-xs text-slate-500">
-            <a href="#fitur" className="hover:text-teal-600 transition-colors">Fitur</a>
-            <a href="#cara-kerja" className="hover:text-teal-600 transition-colors">Cara Kerja</a>
-            <a href="#testimoni" className="hover:text-teal-600 transition-colors">Testimoni</a>
-          </div>
-          <p className="text-xs text-slate-400 text-center md:text-right">
-            &copy; 2026 DiaBites Project. Seluruh hak cipta dilindungi.
-          </p>
-        </div>
-      </footer>
+      <section id="cta" className="mx-auto w-[90%] max-w-6xl pb-20 lg:pb-24">
+        <div className="relative overflow-hidden rounded-[2.8rem] bg-[linear-gradient(135deg,#0f766e_0%,#10b981_52%,#22c55e_100%)] px-6 py-12 text-white shadow-[0_28px_70px_rgba(16,185,129,0.30)] sm:px-10 lg:px-14">
+          <div className="absolute -right-12 -top-10 h-48 w-48 rounded-full bg-white/18 blur-3xl" />
+          <div className="absolute -left-10 bottom-0 h-44 w-44 rounded-full bg-emerald-200/20 blur-3xl" />
 
+          <div className="relative grid items-center gap-10 lg:grid-cols-[1.08fr_0.92fr]">
+            <div className="max-w-2xl">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-4 py-2 text-sm font-semibold text-emerald-50">
+                <ShieldCheck size={16} />
+                Mulai gunakan DiaBites
+              </span>
+              <h2 className="mt-5 text-3xl font-bold leading-tight sm:text-4xl">
+                Baca label gizi dengan cara yang lebih cepat dan nyaman.
+              </h2>
+              <p className="mt-4 max-w-xl text-lg leading-relaxed text-emerald-50/90">
+                Gunakan scanner untuk melihat informasi gizi, periksa hasilnya,
+                lalu manfaatkan komunitas untuk berbagi pengalaman.
+              </p>
+
+              <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+                <Link
+                  to="/register"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-4 text-base font-semibold text-emerald-700 shadow-xl transition hover:-translate-y-0.5 active:scale-[0.98]"
+                >
+                  Mulai Gratis
+                  <ArrowRight size={18} />
+                </Link>
+                <Link
+                  to="/login"
+                  className="inline-flex items-center justify-center rounded-full border border-white/24 bg-white/10 px-8 py-4 text-base font-semibold text-white transition-colors hover:bg-white/16"
+                >
+                  Masuk ke akun
+                </Link>
+              </div>
+            </div>
+
+            <div className="relative mx-auto w-full max-w-md">
+              <AppPreview
+                src="/images/homepage.svg"
+                alt="Ringkasan halaman utama DiaBites"
+                className="mx-auto w-full max-w-[18rem] rotate-6"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
     </div>
   );
 };
 
+const InfoStat = ({ label, value }) => {
+  return (
+    <div className="rounded-[1.7rem] border border-white/80 bg-white/80 px-4 py-4 shadow-sm">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+        {label}
+      </p>
+      <p className="mt-2 text-lg font-bold leading-snug text-slate-900">
+        {value}
+      </p>
+    </div>
+  );
+};
+
+const FeatureSplit = ({
+  id,
+  eyebrow,
+  title,
+  description,
+  image,
+  imageAlt,
+  icon: Icon,
+  accent,
+  bullets,
+  chips,
+  reverse = false,
+}) => {
+  return (
+    <section
+      id={id}
+      className="grid items-center gap-8 rounded-[2.6rem] border border-white/80 bg-white/78 p-6 shadow-[0_24px_60px_rgba(15,23,42,0.07)] lg:grid-cols-2 lg:p-8"
+    >
+      <div className={reverse ? "lg:order-2" : ""}>
+        <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700">
+          <Icon size={16} />
+          {eyebrow}
+        </span>
+        <h3 className="mt-5 text-3xl font-bold tracking-tight text-slate-900">
+          {title}
+        </h3>
+        <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
+          {description}
+        </p>
+
+        <div className="mt-6 space-y-3">
+          {bullets.map((bullet) => (
+            <div
+              key={bullet}
+              className="flex items-start gap-3 rounded-2xl bg-slate-50/80 px-4 py-3"
+            >
+              <div className="mt-0.5 rounded-full bg-emerald-100 p-1 text-emerald-700">
+                <CheckCircle2 size={14} />
+              </div>
+              <p className="text-sm leading-relaxed text-slate-600">{bullet}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 flex flex-wrap gap-2">
+          {chips.map((chip) => (
+            <span
+              key={chip}
+              className="rounded-full border border-slate-200 bg-white/80 px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm"
+            >
+              {chip}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className={reverse ? "lg:order-1" : ""}>
+        <div
+          className={`relative overflow-hidden rounded-[2.3rem] bg-gradient-to-br ${accent} p-5`}
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.8),transparent_40%)]" />
+          <img
+            src={image}
+            alt={imageAlt}
+            loading="lazy"
+            className="relative mx-auto h-auto w-full max-w-[31rem] object-contain drop-shadow-[0_24px_48px_rgba(15,23,42,0.13)]"
+          />
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const AppPreview = ({ src, alt, className = "" }) => {
+  return (
+    <div
+      className={`drop-shadow-[0_28px_55px_rgba(15,23,42,0.16)] ${className}`}
+    >
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        className="h-auto w-full object-contain"
+      />
+    </div>
+  );
+};
+
+const Footer = () => {
+  return (
+    <footer className="bg-white pt-16">
+      <div className="mx-auto w-[90%] max-w-7xl">
+        <div className="grid gap-12 border-b border-slate-200 pb-14 lg:grid-cols-[1.25fr_0.7fr_0.7fr_1.15fr]">
+          <div>
+            <Link to="/" className="flex items-center gap-3">
+              <BrandLogo
+                className="h-10 w-[9.75rem] sm:w-[10.5rem]"
+                imageClassName="scale-[1.72]"
+                priority
+              />
+            </Link>
+
+            <h3 className="mt-10 text-lg font-bold text-slate-900">DiaBites</h3>
+
+            <div className="mt-6 space-y-5 text-slate-600">
+              <div className="flex gap-4">
+                <MapPin size={24} className="mt-1 shrink-0 text-slate-400" />
+                <p className="leading-7">
+                  Jl. Indonesia Merdeka No. 1945, Rengasdengklok, Indonesia
+                </p>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <MessageCircle size={24} className="shrink-0 text-slate-400" />
+                <p>+62 878 4118 5404</p>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <Mail size={24} className="shrink-0 text-slate-400" />
+                <p>support@diabites.site</p>
+              </div>
+            </div>
+
+            <h3 className="mt-9 text-lg font-bold text-slate-900">
+              Temukan Kami
+            </h3>
+
+            <div className="mt-5 flex items-center gap-5 text-slate-400">
+              <Facebook
+                className="transition hover:text-emerald-600"
+                size={25}
+              />
+              <Twitter
+                className="transition hover:text-emerald-600"
+                size={25}
+              />
+              <Instagram
+                className="transition hover:text-emerald-600"
+                size={25}
+              />
+              <Youtube
+                className="transition hover:text-emerald-600"
+                size={27}
+              />
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-bold text-slate-900">Perusahaan</h3>
+            <ul className="mt-7 space-y-5 text-base text-slate-600">
+              <li>
+                <a
+                  href="#beranda"
+                  className="transition hover:text-emerald-600"
+                >
+                  Beranda
+                </a>
+              </li>
+              <li>
+                <a href="#fitur" className="transition hover:text-emerald-600">
+                  Fitur
+                </a>
+              </li>
+              <li>
+                <a href="#alur" className="transition hover:text-emerald-600">
+                  Alur
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#komunitas"
+                  className="transition hover:text-emerald-600"
+                >
+                  Komunitas
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-bold text-slate-900">Lainnya</h3>
+            <ul className="mt-7 space-y-5 text-base text-slate-600">
+              <li>
+                <a href="#" className="transition hover:text-emerald-600">
+                  FAQ
+                </a>
+              </li>
+              <li>
+                <a href="#" className="transition hover:text-emerald-600">
+                  Bantuan
+                </a>
+              </li>
+              <li>
+                <a href="#" className="transition hover:text-emerald-600">
+                  Kebijakan Privasi
+                </a>
+              </li>
+              <li>
+                <a href="#" className="transition hover:text-emerald-600">
+                  Syarat dan Ketentuan
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-bold text-slate-900">
+              Install DiaBites
+            </h3>
+
+            <div className="mt-7 space-y-3">
+              <div className="rounded-2xl border border-slate-200 bg-slate-950 px-5 py-4 text-white shadow-sm">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-300">
+                  Progressive Web App
+                </p>
+                <p className="mt-1 text-lg font-bold leading-tight">
+                  Install langsung dari browser
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-10 rounded-[1.6rem] border border-emerald-100 bg-emerald-50/80 p-5">
+              <p className="text-sm font-semibold leading-6 text-slate-700">
+                DiaBites membantu pengguna membaca dan memahami informasi gizi
+                pada produk makanan maupun minuman.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-8 py-10 lg:flex-row lg:items-start lg:justify-between">
+          <div>
+            <Link to="/" className="flex items-center gap-3">
+              <BrandLogo
+                className="h-10 w-[9.75rem] sm:w-[10.5rem]"
+                imageClassName="scale-[1.72]"
+                priority
+              />
+            </Link>
+            <p className="mt-4 text-sm text-slate-700">
+              Copyright © 2026. All rights reserved
+            </p>
+          </div>
+
+          <div className="text-left lg:text-right">
+            <p className="text-2xl font-bold tracking-tight text-slate-900">
+              DiaBites
+            </p>
+            <p className="mt-1 text-sm font-semibold text-slate-500">
+              Nutrition Label Scanner
+            </p>
+          </div>
+        </div>
+
+        <div className="pb-12 text-sm leading-7 text-slate-400">
+          <p>
+            DiaBites membantu menampilkan informasi dari label gizi agar lebih
+            mudah dibaca. Informasi yang ditampilkan tetap perlu disesuaikan
+            dengan kebutuhan masing-masing pengguna.
+          </p>
+          <p className="mt-4">
+            Aplikasi ini tidak menggantikan saran dokter, ahli gizi, atau tenaga
+            kesehatan profesional. Pengguna disarankan berkonsultasi dengan
+            pihak yang berwenang apabila memiliki kondisi kesehatan tertentu.
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+const Facebook = ({ size = 25, className = "" }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={className}
+    aria-hidden="true"
+  >
+    <path d="M14 8.5V6.75c0-.5.1-.85.32-1.05.2-.22.58-.33 1.12-.33H17V2.25c-.7-.08-1.42-.13-2.15-.13-1.5 0-2.68.43-3.54 1.3C10.44 4.3 10 5.55 10 7.19V8.5H7.5V12H10v9.75h4V12h2.9l.45-3.5H14Z" />
+  </svg>
+);
+
+const Twitter = ({ size = 25, className = "" }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={className}
+    aria-hidden="true"
+  >
+    <path d="M13.9 10.47 21.35 2h-1.76l-6.47 7.35L7.96 2H2l7.81 11.12L2 22h1.76l6.84-7.78L16.06 22H22l-8.1-11.53Zm-2.42 2.75-.8-1.11L4.39 3.3h2.72l5.08 7.12.79 1.11 6.6 9.25h-2.72l-5.38-7.56Z" />
+  </svg>
+);
+
+const Instagram = ({ size = 25, className = "" }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    aria-hidden="true"
+  >
+    <rect x="3" y="3" width="18" height="18" rx="5" />
+    <circle cx="12" cy="12" r="4" />
+    <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+  </svg>
+);
+
+const Youtube = ({ size = 27, className = "" }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={className}
+    aria-hidden="true"
+  >
+    <path d="M21.58 7.19a2.68 2.68 0 0 0-1.88-1.9C18.04 4.85 12 4.85 12 4.85s-6.04 0-7.7.44a2.68 2.68 0 0 0-1.88 1.9A28.05 28.05 0 0 0 2 12a28.05 28.05 0 0 0 .42 4.81 2.68 2.68 0 0 0 1.88 1.9c1.66.44 7.7.44 7.7.44s6.04 0 7.7-.44a2.68 2.68 0 0 0 1.88-1.9A28.05 28.05 0 0 0 22 12a28.05 28.05 0 0 0-.42-4.81ZM10 15.15v-6.3L15.2 12 10 15.15Z" />
+  </svg>
+);
 export default LandingPage;

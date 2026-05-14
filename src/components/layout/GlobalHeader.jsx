@@ -1,13 +1,16 @@
-import { Activity } from 'lucide-react';
+import BrandLogo from '../common/BrandLogo';
 
 const GlobalHeader = () => {
   return (
-    <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100 px-4 flex justify-center items-center h-14 w-full">
-      <div className="flex items-center gap-2 text-teal-600">
-        <Activity size={24} strokeWidth={2.5} />
-        <span className="font-bold text-lg tracking-tight">DiaBites</span>
+    <header className="sticky top-0 z-40 border-b border-white/70 bg-white/80 shadow-[0_10px_30px_rgba(15,23,42,0.05)] backdrop-blur-xl">
+      <div className="flex h-16 w-full items-center justify-center px-4">
+        <BrandLogo
+          className="h-10 w-[9.5rem] sm:w-[10.5rem]"
+          imageClassName="scale-[1.72]"
+          priority
+        />
       </div>
-    </div>
+    </header>
   );
 };
 

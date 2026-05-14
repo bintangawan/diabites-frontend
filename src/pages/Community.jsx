@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import { Send, Heart, MessageCircle, Users } from "lucide-react";
+import { Send, Heart, MessageCircle, Plus, Users, X } from "lucide-react";
 import { Card } from "../components/common/Card";
+import { Button } from "../components/common/Button";
 
 const Community = () => {
   const navigate = useNavigate();
@@ -12,8 +13,25 @@ const Community = () => {
   ]);
 
   const [newMessage, setNewMessage] = useState("");
+  const [isComposerOpen, setIsComposerOpen] = useState(false);
 
   const getInitials = (name) => name.split(" ").map((n) => n[0]).join("").substring(0, 2).toUpperCase();
+
+  useEffect(() => {
+    if (!isComposerOpen) {
+      return undefined;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isComposerOpen]);
+
+  const openComposer = () => setIsComposerOpen(true);
+  const closeComposer = () => setIsComposerOpen(false);
 
   const handleSend = (e) => {
     e.preventDefault();
@@ -27,8 +45,9 @@ const Community = () => {
       likes: 0,
       comments: 0,
     };
-    setPosts([newPost, ...posts]);
+    setPosts((currentPosts) => [newPost, ...currentPosts]);
     setNewMessage("");
+    closeComposer();
   };
 
   const handleGoToDetail = (postId) => {
@@ -36,10 +55,10 @@ const Community = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-slate-50 pb-20">
+    <div className="flex h-full flex-col bg-slate-50 pb-28">
       
       {/* Title Area */}
-      <div className="px-6 py-4 bg-white mb-2 shadow-sm">
+      <div className="mb-2 bg-white px-6 py-4 shadow-sm">
         <h1 className="text-lg font-bold text-slate-900 flex items-center gap-2">
           <Users size={20} className="text-teal-600" /> Ruang Berbagi
         </h1>
@@ -56,7 +75,7 @@ const Community = () => {
             onClick={() => handleGoToDetail(post.id)} // Navigasi saat Card diklik
           >
             <div className="p-4">
-              <div className="flex items-start gap-3 mb-3">
+              <div className="mb-3 flex items-start gap-3">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white text-sm font-bold shrink-0 shadow-sm">
                   {getInitials(post.name)}
                 </div>
@@ -74,7 +93,7 @@ const Community = () => {
                 {post.content}
               </p>
               
-              <div className="flex items-center gap-6 pt-3 border-t border-slate-100 text-slate-500">
+              <div className="flex items-center gap-6 border-t border-slate-100 pt-3 text-slate-500">
                 <button 
                   className="flex items-center gap-1.5 text-xs font-medium hover:text-rose-600 transition-colors"
                   onClick={(e) => {
@@ -100,25 +119,64 @@ const Community = () => {
         ))}
       </div>
 
-      {/* Input Form at Bottom */}
-      <div className="fixed bottom-[64px] left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-slate-200 p-3 z-40 pb-safe">
-        <form onSubmit={handleSend} className="flex items-center gap-2">
-          <input
-            type="text"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Tuliskan sesuatu..."
-            className="flex-1 bg-slate-100 px-4 py-2.5 rounded-full text-sm outline-none focus:ring-2 focus:ring-teal-500 transition-all"
-          />
-          <button
-            type="submit"
-            disabled={!newMessage.trim()}
-            className="w-10 h-10 bg-teal-600 text-white rounded-full flex items-center justify-center disabled:opacity-50 disabled:bg-slate-300 transition-colors shrink-0"
-          >
-            <Send size={18} className="ml-0.5" />
-          </button>
-        </form>
+      <div className="pointer-events-none fixed bottom-[7.15rem] left-1/2 z-40 flex w-full max-w-md -translate-x-1/2 justify-end px-5">
+        <button
+          type="button"
+          onClick={openComposer}
+          className="pointer-events-auto flex h-[3.65rem] w-[3.65rem] items-center justify-center rounded-[1.35rem] bg-[linear-gradient(135deg,#0f766e_0%,#10b981_52%,#22c55e_100%)] text-white shadow-[0_18px_40px_rgba(16,185,129,0.26)] transition-all duration-200 hover:-translate-y-0.5 active:scale-95"
+          aria-label="Buat postingan baru"
+        >
+          <Plus size={24} />
+        </button>
       </div>
+
+      {isComposerOpen && (
+        <div className="fixed inset-0 z-[100] flex items-end justify-center bg-black/55 p-0 backdrop-blur-sm sm:items-center sm:p-4">
+          <div className="max-h-[80vh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-white/98 p-6 shadow-2xl sm:rounded-[28px]">
+            <div className="mb-5 flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-bold text-slate-900">Tulis Postingan</h2>
+                <p className="mt-1 text-sm text-slate-500">
+                  Bagikan pengalaman atau pertanyaanmu ke komunitas.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={closeComposer}
+                className="rounded-full bg-slate-100 p-2 text-slate-500 transition-colors hover:bg-slate-200"
+                aria-label="Tutup modal"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSend} className="space-y-4">
+              <textarea
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                placeholder="Tuliskan sesuatu yang ingin kamu bagikan..."
+                rows={5}
+                className="w-full resize-none rounded-[22px] border border-slate-200 bg-slate-50/90 px-4 py-3 text-sm text-slate-700 outline-none transition-all focus:border-emerald-400 focus:bg-white focus:ring-4 focus:ring-emerald-100"
+              />
+
+              <div className="flex gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  fullWidth
+                  onClick={closeComposer}
+                  className="!py-3.5"
+                >
+                  Batal
+                </Button>
+                <Button type="submit" fullWidth className="!py-3.5" disabled={!newMessage.trim()}>
+                  <Send size={18} /> Submit
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

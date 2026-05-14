@@ -83,96 +83,108 @@ const ScanResult = () => {
 
   if (isAnalyzing) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6 text-center">
-        <div className="w-24 h-24 mb-6 relative">
-          <div className="absolute inset-0 rounded-full border-4 border-gray-200"></div>
-          <div className="absolute inset-0 rounded-full border-4 border-green-500 border-t-transparent animate-spin"></div>
-          <div className="absolute inset-0 flex items-center justify-center text-green-500">
+      <div className="min-h-screen bg-[linear-gradient(180deg,#effcf5_0%,#eef9ff_100%)] flex flex-col items-center justify-center p-6 text-center">
+        <div className="relative mb-6 h-24 w-24">
+          <div className="absolute inset-0 rounded-full border-4 border-emerald-100"></div>
+          <div className="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin"></div>
+          <div className="absolute inset-0 flex items-center justify-center text-emerald-500">
             <RefreshCw className="animate-pulse" size={32} />
           </div>
         </div>
-        <h2 className="text-xl font-bold text-gray-900 mb-2">Menganalisis Label...</h2>
-        <p className="text-gray-500 text-sm">AI DiaBites sedang mengekstraksi data kalori, gula, dan nutrisi lainnya.</p>
+        <h2 className="mb-2 text-xl font-bold text-slate-900">Menganalisis Label...</h2>
+        <p className="max-w-xs text-sm leading-relaxed text-slate-500">
+          AI DiaBites sedang mengekstraksi data kalori, gula, dan nutrisi lainnya.
+        </p>
       </div>
     );
   }
 
   // Array pembantu untuk render UI nutrisi
   const nutrientList = [
-    { label: 'Kalori', value: scanData.nutrients.kalori, unit: 'kcal', color: 'bg-blue-500', max: 500 },
-    { label: 'Gula', value: scanData.nutrients.gula, unit: 'g', color: 'bg-yellow-500', max: 50 },
-    { label: 'Karbohidrat', value: scanData.nutrients.karbohidrat, unit: 'g', color: 'bg-purple-500', max: 100 },
-    { label: 'Lemak', value: scanData.nutrients.lemak, unit: 'g', color: 'bg-green-500', max: 50 },
-    { label: 'Sodium', value: scanData.nutrients.sodium, unit: 'mg', color: 'bg-orange-500', max: 1000 },
+    { label: 'Kalori', value: scanData.nutrients.kalori, unit: 'kcal', color: 'bg-sky-500', max: 500 },
+    { label: 'Gula', value: scanData.nutrients.gula, unit: 'g', color: 'bg-amber-400', max: 50 },
+    { label: 'Karbohidrat', value: scanData.nutrients.karbohidrat, unit: 'g', color: 'bg-cyan-500', max: 100 },
+    { label: 'Lemak', value: scanData.nutrients.lemak, unit: 'g', color: 'bg-emerald-500', max: 50 },
+    { label: 'Sodium', value: scanData.nutrients.sodium, unit: 'mg', color: 'bg-orange-400', max: 1000 },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24 relative">
-      <header className="bg-white px-4 py-4 flex items-center gap-4 sticky top-0 z-20 shadow-sm">
-        <button onClick={() => navigate('/home')} className="p-2 bg-gray-50 rounded-full text-gray-600 hover:bg-gray-100">
+    <div className="relative min-h-screen bg-[linear-gradient(180deg,#effcf5_0%,#eef9ff_100%)] pb-24">
+      <header className="sticky top-0 z-20 flex items-center gap-4 border-b border-white/70 bg-white/82 px-4 py-4 shadow-[0_12px_30px_rgba(15,23,42,0.05)] backdrop-blur-xl">
+        <button
+          onClick={() => navigate('/home')}
+          className="rounded-2xl bg-slate-50 p-2.5 text-slate-600 transition-colors hover:bg-slate-100"
+        >
           <ChevronLeft size={24} />
         </button>
-        <h1 className="text-lg font-bold text-gray-900">Hasil Analisis</h1>
+        <div>
+          <h1 className="text-lg font-bold text-slate-900">Hasil Analisis</h1>
+          <p className="text-xs text-slate-500">Ringkasan scan label gizi</p>
+        </div>
       </header>
 
-      <div className="p-4 space-y-4 max-w-md mx-auto">
-        <div className="w-full h-40 bg-gray-200 rounded-2xl overflow-hidden flex items-center justify-center border border-gray-200 shadow-inner">
+      <div className="mx-auto max-w-md space-y-4 p-4">
+        <div className="overflow-hidden rounded-[28px] border border-white/80 bg-white/85 p-2 shadow-[0_18px_45px_rgba(15,23,42,0.08)]">
+          <div className="flex h-44 w-full items-center justify-center overflow-hidden rounded-[22px] border border-emerald-100 bg-slate-100 shadow-inner">
           {imageToAnalyze ? (
             <img src={imageToAnalyze} alt="Scanned Label" className="w-full h-full object-cover" />
           ) : (
-            <span className="text-gray-400 text-sm">Gambar Label Gizi</span>
+            <span className="text-sm text-slate-400">Gambar Label Gizi</span>
           )}
+          </div>
         </div>
 
-        <Card noPadding className="border-yellow-200 bg-yellow-50 overflow-hidden">
-          <div className="p-5 flex items-start gap-4">
+        <Card noPadding className="overflow-hidden border-amber-200 bg-[linear-gradient(180deg,#fffdf2_0%,#ffffff_100%)]">
+          <div className="flex items-start gap-4 p-5">
             <div className="mt-1">
-              <AlertTriangle size={32} className="text-yellow-600" />
+              <div className="rounded-2xl bg-amber-100 p-2.5 text-amber-700">
+                <AlertTriangle size={26} />
+              </div>
             </div>
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <h2 className="text-xl font-bold text-gray-900">{scanData.status}</h2>
+              <div className="mb-1 flex items-center gap-2">
+                <h2 className="text-xl font-bold text-slate-900">{scanData.status}</h2>
                 <Badge text="Peringatan" status="caution" />
               </div>
-              <p className="text-sm text-gray-700 leading-relaxed">
-                {scanData.reason}
-              </p>
+              <p className="text-sm leading-relaxed text-slate-600">{scanData.reason}</p>
             </div>
           </div>
         </Card>
 
         <Card>
-          <div className="flex justify-between items-center mb-5">
+          <div className="mb-5 flex items-center justify-between">
             <div>
-              <h3 className="font-bold text-gray-900">Kandungan Gizi</h3>
-              <span className="text-xs font-medium text-gray-500">Per {scanData.servingSize}</span>
+              <h3 className="font-bold text-slate-900">Kandungan Gizi</h3>
+              <span className="text-xs font-medium text-slate-500">Per {scanData.servingSize}</span>
             </div>
-            
-            {/* Tombol Edit Manual */}
-            <button 
+
+            <button
               onClick={handleOpenEdit}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 rounded-lg text-sm font-medium hover:bg-green-100 transition-colors"
+              className="flex items-center gap-1.5 rounded-xl bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-100"
             >
               <Edit2 size={16} /> Edit
             </button>
           </div>
-          
+
           <div className="space-y-4">
             {nutrientList.map((item, idx) => (
               <div key={idx}>
-                <div className="flex justify-between text-sm font-medium mb-1.5">
-                  <span className="text-gray-600">{item.label}</span>
-                  <span className="text-gray-900">{item.value} {item.unit}</span>
+                <div className="mb-1.5 flex justify-between text-sm font-medium">
+                  <span className="text-slate-600">{item.label}</span>
+                  <span className="text-slate-900">{item.value} {item.unit}</span>
                 </div>
-                <div className="w-full bg-gray-100 rounded-full h-2">
-                  <div className={`h-2 rounded-full ${item.color} transition-all duration-500`} style={{ width: `${Math.min((item.value / item.max) * 100, 100)}%` }}></div>
+                <div className="h-2 w-full rounded-full bg-slate-100">
+                  <div
+                    className={`h-2 rounded-full ${item.color} transition-all duration-500`}
+                    style={{ width: `${Math.min((item.value / item.max) * 100, 100)}%` }}
+                  ></div>
                 </div>
               </div>
             ))}
           </div>
         </Card>
 
-        <div className="flex gap-3 mt-6">
+        <div className="mt-6 flex gap-3">
           <Button variant="outline" fullWidth onClick={() => navigate('/scanner')} className="!py-3.5">
             <RefreshCw size={18} /> Scan Ulang
           </Button>
@@ -184,17 +196,19 @@ const ScanResult = () => {
 
       {/* OVERLAY MODAL EDIT MANUAL */}
       {isEditModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200">
-          <div className="bg-white w-full max-w-md rounded-t-3xl sm:rounded-2xl p-6 shadow-2xl h-[80vh] sm:h-auto overflow-y-auto">
-            
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Koreksi Data Gizi</h2>
-              <button onClick={() => setIsEditModalOpen(false)} className="p-2 bg-gray-100 rounded-full text-gray-500 hover:bg-gray-200">
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 p-0 backdrop-blur-sm sm:items-center sm:p-4">
+          <div className="h-[80vh] w-full max-w-md overflow-y-auto rounded-t-3xl bg-white/98 p-6 shadow-2xl sm:h-auto sm:rounded-[28px]">
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-slate-900">Koreksi Data Gizi</h2>
+              <button
+                onClick={() => setIsEditModalOpen(false)}
+                className="rounded-full bg-slate-100 p-2 text-slate-500 hover:bg-slate-200"
+              >
                 <X size={20} />
               </button>
             </div>
-            
-            <p className="text-sm text-gray-500 mb-6">
+
+            <p className="mb-6 text-sm text-slate-500">
               Perbaiki nilai gizi jika hasil baca otomatis (OCR) kurang akurat sesuai label kemasan.
             </p>
 
@@ -213,13 +227,12 @@ const ScanResult = () => {
 
               <Input type="number" label="Sodium / Natrium (mg)" name="sodium" value={editFormData.sodium || ''} onChange={handleEditChange} required />
 
-              <div className="pt-4 mt-2 border-t border-gray-100">
+              <div className="mt-2 border-t border-slate-100 pt-4">
                 <Button type="submit" fullWidth className="!py-3.5">
                   Simpan Perubahan
                 </Button>
               </div>
             </form>
-
           </div>
         </div>
       )}

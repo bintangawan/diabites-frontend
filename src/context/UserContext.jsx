@@ -1,6 +1,8 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+/* eslint-disable react-refresh/only-export-components */
 
-const UserContext = createContext();
+import { createContext, useContext, useEffect, useState } from 'react';
+
+const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
   const [userProfile, setUserProfile] = useState(() => {
@@ -8,11 +10,13 @@ export const UserProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : null;
   });
 
-  // Auto-save ke localStorage tiap ada perubahan
   useEffect(() => {
     if (userProfile) {
       localStorage.setItem('diabites_user', JSON.stringify(userProfile));
+      return;
     }
+
+    localStorage.removeItem('diabites_user');
   }, [userProfile]);
 
   return (

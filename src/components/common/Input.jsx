@@ -8,8 +8,8 @@ export const Input = ({ label, error, icon, rightIcon, className = '', ...props 
         )}
         <input
           className={`w-full px-4 py-3 rounded-xl border ${
-            error ? 'border-rose-400 focus:ring-rose-100' : 'border-slate-200 focus:border-teal-500 focus:ring-teal-100'
-          } bg-white outline-none focus:ring-4 transition-all ${icon ? 'pl-11' : ''} ${rightIcon ? 'pr-11' : ''}`}
+            error ? 'border-orange-300 focus:ring-orange-100 focus:border-orange-400' : 'border-slate-200 focus:border-emerald-400 focus:ring-emerald-100'
+          } bg-white/95 outline-none shadow-sm focus:ring-4 transition-all ${icon ? 'pl-11' : ''} ${rightIcon ? 'pr-11' : ''}`}
           {...props}
         />
         {rightIcon && (
@@ -18,7 +18,7 @@ export const Input = ({ label, error, icon, rightIcon, className = '', ...props 
           </div>
         )}
       </div>
-      {error && <span className="text-xs text-rose-500 ml-1 mt-0.5">{error}</span>}
+      {error && <span className="text-xs text-orange-500 ml-1 mt-0.5">{error}</span>}
     </div>
   );
 };
