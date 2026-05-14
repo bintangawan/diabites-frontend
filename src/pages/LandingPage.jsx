@@ -778,7 +778,7 @@ const Footer = () => {
               DiaBites
             </p>
             <p className="mt-1 text-sm font-semibold text-slate-500">
-              Nutrition Label Scanner
+              Eat Wiser, Live Better
             </p>
           </div>
         </div>
