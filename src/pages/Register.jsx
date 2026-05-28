@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { Eye, EyeOff, Loader2, Lock, Mail, User } from 'lucide-react';
 import { Input } from '../components/common/Input';
 import { Button } from '../components/common/Button';
+import BrandLogo from '../components/common/BrandLogo';
 import { useUser } from '../context/UserContext';
 import { extractErrorMessage } from '../services/api';
 
@@ -61,8 +62,15 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center px-6 bg-white max-w-md mx-auto py-8">
+    <div className="min-h-screen flex flex-col justify-center px-6 bg-[var(--diabites-green-surface)] max-w-md mx-auto py-8">
       <div className="mb-8 text-center">
+        <div className="mb-4 flex justify-center">
+          <BrandLogo
+            className="h-10 w-[9.75rem] sm:w-[10.5rem]"
+            imageClassName="scale-[1.72]"
+            priority
+          />
+        </div>
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Buat Akun</h1>
         <p className="text-gray-500">Mulai perjalanan sehatmu bersama DiaBites.</p>
       </div>
@@ -122,20 +130,24 @@ const Register = () => {
             name="agreeTerms"
             checked={formData.agreeTerms}
             onChange={handleChange}
-            className="mt-1 w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500"
+            className="mt-1 w-4 h-4 text-[var(--diabites-green)] bg-gray-100 border-gray-300 rounded focus:ring-[var(--diabites-green)]"
           />
           <label htmlFor="terms" className="text-sm text-gray-600">
-            Saya setuju dengan <a href="#" className="text-green-600 font-medium hover:underline">Syarat & Ketentuan</a> serta <a href="#" className="text-green-600 font-medium hover:underline">Kebijakan Privasi</a> DiaBites.
+            Saya setuju dengan <a href="#" className="text-[var(--diabites-green)] font-medium hover:underline">Syarat & Ketentuan</a> serta <a href="#" className="text-[var(--diabites-green)] font-medium hover:underline">Kebijakan Privasi</a> DiaBites.
           </label>
         </div>
 
-        <Button type="submit" className="mt-4" disabled={isLoading}>
+        <Button
+          type="submit"
+          className="mt-4 !bg-[var(--diabites-green)] !shadow-[0_18px_36px_var(--diabites-green-shadow)] hover:!bg-[var(--diabites-green-dark)]"
+          disabled={isLoading}
+        >
           {isLoading ? <Loader2 className="animate-spin" size={20} /> : 'Daftar Sekarang'}
         </Button>
       </form>
 
       <p className="text-center text-sm text-gray-500 mt-6">
-        Sudah punya akun? <Link to="/login" className="text-green-600 font-semibold hover:underline">Masuk</Link>
+        Sudah punya akun? <Link to="/login" className="text-[var(--diabites-green)] font-semibold hover:underline">Masuk</Link>
       </p>
     </div>
   );

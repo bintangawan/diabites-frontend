@@ -112,15 +112,15 @@ const Community = () => {
   };
 
   return (
-    <div className="flex h-full flex-col bg-slate-50 pb-28">
+    <div className="flex min-h-full flex-col bg-slate-50 pb-44">
       <div className="mb-2 bg-white px-6 py-4 shadow-sm">
         <h1 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-          <Users size={20} className="text-teal-600" /> Ruang Berbagi
+          <Users size={20} className="text-[var(--diabites-green)]" /> Ruang Berbagi
         </h1>
         <p className="text-xs text-slate-500">Komunitas pejuang diabetes</p>
       </div>
 
-      <div className="p-6 space-y-4">
+      <div className="space-y-4 p-6 pb-10">
         {isLoading && (
           <Card className="text-sm text-slate-500">Memuat postingan komunitas...</Card>
         )}
@@ -133,12 +133,12 @@ const Community = () => {
           <Card
             key={post.id}
             noPadding
-            className="overflow-hidden cursor-pointer hover:border-teal-300 transition-all hover:shadow-md"
+            className="overflow-hidden cursor-pointer transition-all hover:border-[var(--diabites-green-border)] hover:shadow-md"
             onClick={() => navigate(`/community/${post.id}`)}
           >
             <div className="p-4">
               <div className="mb-3 flex items-start gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center overflow-hidden text-white text-sm font-bold shrink-0 shadow-sm">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--diabites-green)] text-sm font-bold text-white shadow-sm">
                   {post.author.avatarUrl ? (
                     <img src={post.author.avatarUrl} alt={post.author.name} className="h-full w-full object-cover" />
                   ) : (
@@ -168,7 +168,7 @@ const Community = () => {
                 </button>
 
                 <button
-                  className="flex items-center gap-1.5 text-xs font-medium hover:text-teal-600 transition-colors"
+                  className="flex items-center gap-1.5 text-xs font-medium transition-colors hover:text-[var(--diabites-green)]"
                   onClick={(event) => {
                     event.stopPropagation();
                     navigate(`/community/${post.id}`);
@@ -186,7 +186,7 @@ const Community = () => {
         <button
           type="button"
           onClick={openComposer}
-          className="pointer-events-auto flex h-[3.65rem] w-[3.65rem] items-center justify-center rounded-[1.35rem] bg-[linear-gradient(135deg,#0f766e_0%,#10b981_52%,#22c55e_100%)] text-white shadow-[0_18px_40px_rgba(16,185,129,0.26)] transition-all duration-200 hover:-translate-y-0.5 active:scale-95"
+          className="pointer-events-auto flex h-[3.65rem] w-[3.65rem] items-center justify-center rounded-[1.35rem] bg-[var(--diabites-green)] text-white shadow-[0_18px_40px_var(--diabites-green-shadow)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[var(--diabites-green-dark)] active:scale-95"
           aria-label="Buat postingan baru"
         >
           <Plus size={24} />
@@ -219,7 +219,7 @@ const Community = () => {
                 onChange={(event) => setNewMessage(event.target.value)}
                 placeholder="Tuliskan sesuatu yang ingin kamu bagikan..."
                 rows={5}
-                className="w-full resize-none rounded-[22px] border border-slate-200 bg-slate-50/90 px-4 py-3 text-sm text-slate-700 outline-none transition-all focus:border-emerald-400 focus:bg-white focus:ring-4 focus:ring-emerald-100"
+                className="w-full resize-none rounded-[22px] border border-slate-200 bg-slate-50/90 px-4 py-3 text-sm text-slate-700 outline-none transition-all focus:border-[var(--diabites-green)] focus:bg-white focus:ring-4 focus:ring-[var(--diabites-green-ring)]"
               />
 
               <div className="flex gap-3">

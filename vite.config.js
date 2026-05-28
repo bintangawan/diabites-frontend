@@ -17,7 +17,7 @@ export default defineConfig({
       // `registerType` only controls service worker update behavior, not the app install prompt.
       registerType: 'prompt',
       devOptions: {
-        enabled: true,
+        enabled: false,
       },
       manifestFilename: 'manifest.webmanifest',
       includeAssets: [

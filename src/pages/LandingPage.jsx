@@ -17,6 +17,7 @@ import {
   Users,
 } from "lucide-react";
 import BrandLogo from "../components/common/BrandLogo";
+import Chatbot from "../components/layout/Chatbot";
 
 const heroHighlights = [
   "Scan label makanan atau minuman dalam beberapa detik.",
@@ -56,7 +57,7 @@ const featureSections = [
     image: "/images/scannerpage.svg",
     imageAlt: "Tampilan scanner DiaBites",
     icon: Scan,
-    accent: "from-emerald-100 via-teal-50 to-white",
+    panelClass: "bg-[var(--diabites-green-surface)]",
     bullets: [
       "Arahkan kamera ke informasi nilai gizi dan ambil gambar langsung dari aplikasi.",
       "Cocok untuk membaca produk kemasan seperti minuman, camilan, dan makanan siap santap.",
@@ -73,7 +74,7 @@ const featureSections = [
     image: "/images/analisispage.svg",
     imageAlt: "Tampilan hasil analisis DiaBites",
     icon: Edit2,
-    accent: "from-sky-100 via-cyan-50 to-white",
+    panelClass: "bg-white",
     bullets: [
       "Nilai gizi disusun berdasarkan informasi penting agar mudah dibaca.",
       "Tampilan hasil dibuat ringkas tanpa menghilangkan detail utama.",
@@ -91,7 +92,7 @@ const featureSections = [
     image: "/images/communitypage.svg",
     imageAlt: "Tampilan komunitas DiaBites",
     icon: MessageCircle,
-    accent: "from-orange-100 via-amber-50 to-white",
+    panelClass: "bg-[var(--diabites-green-soft)]",
     bullets: [
       "Pengguna dapat menulis postingan singkat tentang produk, kebiasaan makan, atau pertanyaan sehari-hari.",
       "Komunitas membantu pengguna merasa lebih didukung dalam menjaga pola konsumsi.",
@@ -151,8 +152,8 @@ const trustCards = [
 
 const LandingPage = () => {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#f7fbf8] font-sans text-slate-900 selection:bg-emerald-200 selection:text-emerald-950">
-      <div className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-[42rem] bg-[radial-gradient(circle_at_top_left,rgba(52,211,153,0.24),transparent_34%),radial-gradient(circle_at_top_right,rgba(125,211,252,0.22),transparent_32%)]" />
+    <div className="min-h-screen overflow-x-hidden bg-[#f7fbf8] font-sans text-slate-900 selection:bg-[var(--diabites-green-panel)] selection:text-[var(--diabites-green-dark)]">
+      <div className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-[42rem] bg-[var(--diabites-green-surface)]" />
 
       <nav className="fixed inset-x-0 top-0 z-50 border-b border-white/70 bg-white/80 backdrop-blur-xl">
         <div className="mx-auto flex h-16 w-[90%] max-w-7xl items-center justify-between gap-4">
@@ -167,19 +168,19 @@ const LandingPage = () => {
           <div className="hidden items-center gap-7 text-sm font-semibold text-slate-600 md:flex">
             <a
               href="#fitur"
-              className="transition-colors hover:text-emerald-700"
+              className="transition-colors hover:text-[var(--diabites-green)]"
             >
               Fitur
             </a>
             <a
               href="#alur"
-              className="transition-colors hover:text-emerald-700"
+              className="transition-colors hover:text-[var(--diabites-green)]"
             >
               Alur
             </a>
             <a
               href="#komunitas"
-              className="transition-colors hover:text-emerald-700"
+              className="transition-colors hover:text-[var(--diabites-green)]"
             >
               Komunitas
             </a>
@@ -188,13 +189,13 @@ const LandingPage = () => {
           <div className="flex items-center gap-3">
             <Link
               to="/login"
-              className="hidden text-sm font-semibold text-slate-600 transition-colors hover:text-emerald-700 sm:inline-flex"
+              className="hidden text-sm font-semibold text-slate-600 transition-colors hover:text-[var(--diabites-green)] sm:inline-flex"
             >
               Masuk
             </Link>
             <Link
               to="/register"
-              className="inline-flex items-center gap-2 rounded-full bg-[linear-gradient(135deg,#0f766e_0%,#10b981_52%,#22c55e_100%)] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_16px_36px_rgba(16,185,129,0.24)] transition hover:-translate-y-0.5 active:scale-[0.98]"
+              className="inline-flex items-center gap-2 rounded-full bg-[var(--diabites-green)] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_16px_36px_var(--diabites-green-shadow)] transition hover:-translate-y-0.5 hover:bg-[var(--diabites-green-dark)] active:scale-[0.98]"
             >
               Daftar Gratis
             </Link>
@@ -208,7 +209,7 @@ const LandingPage = () => {
       >
         <div className="grid items-center gap-14 lg:grid-cols-[1.02fr_0.98fr]">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white/82 px-4 py-2 text-sm font-semibold text-emerald-700 shadow-sm">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[var(--diabites-green-border)] bg-white/82 px-4 py-2 text-sm font-semibold text-[var(--diabites-green)] shadow-sm">
               <Sparkles size={16} className="text-orange-500" />
               Baca label gizi dengan lebih cepat dan jelas
             </div>
@@ -229,7 +230,7 @@ const LandingPage = () => {
                   key={item}
                   className="flex items-start gap-3 rounded-2xl border border-white/80 bg-white/78 px-4 py-3 shadow-[0_10px_24px_rgba(15,23,42,0.05)] backdrop-blur-sm"
                 >
-                  <div className="mt-0.5 rounded-full bg-emerald-100 p-1 text-emerald-700">
+                  <div className="mt-0.5 rounded-full bg-[var(--diabites-green-soft)] p-1 text-[var(--diabites-green)]">
                     <CheckCircle2 size={14} />
                   </div>
                   <p className="text-sm leading-relaxed text-slate-600">
@@ -242,7 +243,7 @@ const LandingPage = () => {
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <Link
                 to="/register"
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#0f766e_0%,#10b981_52%,#22c55e_100%)] px-8 py-4 text-base font-semibold text-white shadow-[0_20px_40px_rgba(16,185,129,0.24)] transition hover:-translate-y-0.5 active:scale-[0.98]"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--diabites-green)] px-8 py-4 text-base font-semibold text-white shadow-[0_20px_40px_var(--diabites-green-shadow)] transition hover:-translate-y-0.5 hover:bg-[var(--diabites-green-dark)] active:scale-[0.98]"
               >
                 Coba DiaBites Sekarang
                 <ArrowRight size={18} />
@@ -250,7 +251,7 @@ const LandingPage = () => {
 
               <a
                 href="#fitur"
-                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/88 px-8 py-4 text-base font-semibold text-slate-700 shadow-sm transition-colors hover:border-emerald-300 hover:text-emerald-700"
+                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/88 px-8 py-4 text-base font-semibold text-slate-700 shadow-sm transition-colors hover:border-[var(--diabites-green-border)] hover:text-[var(--diabites-green)]"
               >
                 Lihat fitur utama
               </a>
@@ -264,8 +265,8 @@ const LandingPage = () => {
           </div>
 
           <div className="relative mx-auto w-full max-w-2xl">
-            <div className="absolute -left-12 top-12 h-56 w-56 rounded-full bg-emerald-200/60 blur-3xl" />
-            <div className="absolute -right-10 bottom-8 h-56 w-56 rounded-full bg-sky-200/60 blur-3xl" />
+            <div className="absolute -left-12 top-12 h-56 w-56 rounded-full bg-[var(--diabites-green-panel)] blur-3xl" />
+            <div className="absolute -right-10 bottom-8 h-56 w-56 rounded-full bg-[var(--diabites-green-soft)] blur-3xl" />
 
             <div className="relative flex items-end justify-center gap-4 px-1 sm:gap-6">
               <AppPreview
@@ -283,14 +284,14 @@ const LandingPage = () => {
         </div>
       </section>
 
-      <section className="border-y border-emerald-100/70 bg-white/70">
+      <section className="border-y border-[var(--diabites-green-border)] bg-white/70">
         <div className="mx-auto grid w-[90%] max-w-7xl gap-4 py-8 lg:grid-cols-3">
           {valueCards.map(({ icon: Icon, title, description }) => (
             <div
               key={title}
-              className="rounded-[2rem] border border-emerald-100/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.88)_0%,rgba(240,253,250,0.76)_100%)] p-6 shadow-sm"
+              className="rounded-[2rem] border border-[var(--diabites-green-border)] bg-[var(--diabites-green-surface)] p-6 shadow-sm"
             >
-              <div className="mb-4 inline-flex rounded-2xl bg-emerald-100 p-3 text-emerald-700">
+              <div className="mb-4 inline-flex rounded-2xl bg-[var(--diabites-green-soft)] p-3 text-[var(--diabites-green)]">
                 <Icon size={22} />
               </div>
               <h2 className="text-xl font-bold text-slate-900">{title}</h2>
@@ -305,7 +306,7 @@ const LandingPage = () => {
       <section className="mx-auto w-[90%] max-w-7xl py-20 lg:py-24">
         <div className="grid items-center gap-8 lg:grid-cols-[0.85fr_1.15fr]">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700">
+            <span className="inline-flex items-center gap-2 rounded-full bg-[var(--diabites-green-soft)] px-4 py-2 text-sm font-semibold text-[var(--diabites-green)]">
               <ShieldCheck size={16} />
               Ringan digunakan sehari-hari
             </span>
@@ -324,7 +325,7 @@ const LandingPage = () => {
                 key={title}
                 className="rounded-[2rem] border border-white/80 bg-white/82 p-6 shadow-[0_18px_44px_rgba(15,23,42,0.06)]"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--diabites-green-soft)] text-[var(--diabites-green)]">
                   <Icon size={25} />
                 </div>
                 <h3 className="mt-6 text-lg font-bold leading-7 text-slate-900">
@@ -341,7 +342,7 @@ const LandingPage = () => {
 
       <section id="fitur" className="mx-auto w-[90%] max-w-7xl pb-20 lg:pb-24">
         <div className="mx-auto mb-14 max-w-3xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700">
+          <span className="inline-flex items-center gap-2 rounded-full bg-[var(--diabites-green-soft)] px-4 py-2 text-sm font-semibold text-[var(--diabites-green)]">
             <BadgeCheck size={16} />
             Fitur utama DiaBites
           </span>
@@ -363,11 +364,11 @@ const LandingPage = () => {
 
       <section
         id="alur"
-        className="border-y border-emerald-100/70 bg-[linear-gradient(180deg,#0f172a_0%,#082f49_100%)] py-20 text-white lg:py-24"
+        className="border-y border-[var(--diabites-green-border)] bg-[var(--diabites-green-deep)] py-20 text-white lg:py-24"
       >
         <div className="mx-auto w-[90%] max-w-7xl">
           <div className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 text-sm font-semibold text-emerald-200">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 text-sm font-semibold text-white/80">
               <Sparkles size={16} />
               Alur penggunaan
             </span>
@@ -387,10 +388,10 @@ const LandingPage = () => {
                 className="rounded-[2rem] border border-white/10 bg-white/6 p-6 shadow-[0_20px_40px_rgba(0,0,0,0.16)] backdrop-blur-sm"
               >
                 <div className="mb-5 flex items-center justify-between">
-                  <div className="rounded-2xl bg-emerald-400/15 p-3 text-emerald-300">
+                  <div className="rounded-2xl bg-white/12 p-3 text-white/84">
                     <Icon size={22} />
                   </div>
-                  <span className="text-sm font-semibold text-emerald-200/80">
+                  <span className="text-sm font-semibold text-white/65">
                     0{index + 1}
                   </span>
                 </div>
@@ -408,7 +409,7 @@ const LandingPage = () => {
         id="komunitas"
         className="mx-auto w-[90%] max-w-7xl py-20 lg:py-24"
       >
-        <div className="grid items-center gap-10 rounded-[2.6rem] border border-white/80 bg-[linear-gradient(135deg,rgba(255,255,255,0.88)_0%,rgba(240,253,250,0.78)_48%,rgba(239,246,255,0.86)_100%)] p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] lg:grid-cols-[1.02fr_0.98fr] lg:p-10">
+        <div className="grid items-center gap-10 rounded-[2.6rem] border border-white/80 bg-[var(--diabites-green-surface)] p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] lg:grid-cols-[1.02fr_0.98fr] lg:p-10">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full bg-sky-50 px-4 py-2 text-sm font-semibold text-sky-700">
               <Users size={16} />
@@ -432,7 +433,7 @@ const LandingPage = () => {
                   Pengguna dapat berbagi cerita singkat tanpa alur yang rumit.
                 </p>
               </div>
-              <div className="rounded-[1.8rem] border border-emerald-100 bg-white/82 p-4">
+              <div className="rounded-[1.8rem] border border-[var(--diabites-green-border)] bg-white/82 p-4">
                 <p className="text-sm font-bold text-slate-900">
                   Saling memberi dukungan
                 </p>
@@ -446,7 +447,7 @@ const LandingPage = () => {
 
           <div className="relative mx-auto w-full max-w-xl">
             <div className="absolute -left-6 top-10 h-40 w-40 rounded-full bg-sky-200/60 blur-3xl" />
-            <div className="absolute -right-6 bottom-8 h-40 w-40 rounded-full bg-emerald-200/60 blur-3xl" />
+            <div className="absolute -right-6 bottom-8 h-40 w-40 rounded-full bg-[var(--diabites-green-panel)] blur-3xl" />
 
             <div className="relative flex items-end justify-center gap-4">
               <AppPreview
@@ -465,20 +466,20 @@ const LandingPage = () => {
       </section>
 
       <section id="cta" className="mx-auto w-[90%] max-w-6xl pb-20 lg:pb-24">
-        <div className="relative overflow-hidden rounded-[2.8rem] bg-[linear-gradient(135deg,#0f766e_0%,#10b981_52%,#22c55e_100%)] px-6 py-12 text-white shadow-[0_28px_70px_rgba(16,185,129,0.30)] sm:px-10 lg:px-14">
+        <div className="relative overflow-hidden rounded-[2.8rem] bg-[var(--diabites-green)] px-6 py-12 text-white shadow-[0_28px_70px_var(--diabites-green-shadow)] sm:px-10 lg:px-14">
           <div className="absolute -right-12 -top-10 h-48 w-48 rounded-full bg-white/18 blur-3xl" />
-          <div className="absolute -left-10 bottom-0 h-44 w-44 rounded-full bg-emerald-200/20 blur-3xl" />
+          <div className="absolute -left-10 bottom-0 h-44 w-44 rounded-full bg-white/10 blur-3xl" />
 
           <div className="relative grid items-center gap-10 lg:grid-cols-[1.08fr_0.92fr]">
             <div className="max-w-2xl">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-4 py-2 text-sm font-semibold text-emerald-50">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-4 py-2 text-sm font-semibold text-white/90">
                 <ShieldCheck size={16} />
                 Mulai gunakan DiaBites
               </span>
               <h2 className="mt-5 text-3xl font-bold leading-tight sm:text-4xl">
                 Baca label gizi dengan cara yang lebih cepat dan nyaman.
               </h2>
-              <p className="mt-4 max-w-xl text-lg leading-relaxed text-emerald-50/90">
+              <p className="mt-4 max-w-xl text-lg leading-relaxed text-white/88">
                 Gunakan scanner untuk melihat informasi gizi, periksa hasilnya,
                 lalu manfaatkan komunitas untuk berbagi pengalaman.
               </p>
@@ -486,7 +487,7 @@ const LandingPage = () => {
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                 <Link
                   to="/register"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-4 text-base font-semibold text-emerald-700 shadow-xl transition hover:-translate-y-0.5 active:scale-[0.98]"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-4 text-base font-semibold text-[var(--diabites-green)] shadow-xl transition hover:-translate-y-0.5 active:scale-[0.98]"
                 >
                   Mulai Gratis
                   <ArrowRight size={18} />
@@ -511,6 +512,7 @@ const LandingPage = () => {
         </div>
       </section>
 
+      <Chatbot />
       <Footer />
     </div>
   );
@@ -537,7 +539,7 @@ const FeatureSplit = ({
   image,
   imageAlt,
   icon: Icon,
-  accent,
+  panelClass,
   bullets,
   chips,
   reverse = false,
@@ -548,7 +550,7 @@ const FeatureSplit = ({
       className="grid items-center gap-8 rounded-[2.6rem] border border-white/80 bg-white/78 p-6 shadow-[0_24px_60px_rgba(15,23,42,0.07)] lg:grid-cols-2 lg:p-8"
     >
       <div className={reverse ? "lg:order-2" : ""}>
-        <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700">
+        <span className="inline-flex items-center gap-2 rounded-full bg-[var(--diabites-green-soft)] px-4 py-2 text-sm font-semibold text-[var(--diabites-green)]">
           <Icon size={16} />
           {eyebrow}
         </span>
@@ -565,7 +567,7 @@ const FeatureSplit = ({
               key={bullet}
               className="flex items-start gap-3 rounded-2xl bg-slate-50/80 px-4 py-3"
             >
-              <div className="mt-0.5 rounded-full bg-emerald-100 p-1 text-emerald-700">
+              <div className="mt-0.5 rounded-full bg-[var(--diabites-green-soft)] p-1 text-[var(--diabites-green)]">
                 <CheckCircle2 size={14} />
               </div>
               <p className="text-sm leading-relaxed text-slate-600">{bullet}</p>
@@ -587,9 +589,8 @@ const FeatureSplit = ({
 
       <div className={reverse ? "lg:order-1" : ""}>
         <div
-          className={`relative overflow-hidden rounded-[2.3rem] bg-gradient-to-br ${accent} p-5`}
+          className={`relative overflow-hidden rounded-[2.3rem] border border-white/80 ${panelClass} p-5`}
         >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.8),transparent_40%)]" />
           <img
             src={image}
             alt={imageAlt}
@@ -658,19 +659,19 @@ const Footer = () => {
 
             <div className="mt-5 flex items-center gap-5 text-slate-400">
               <Facebook
-                className="transition hover:text-emerald-600"
+                className="transition hover:text-[var(--diabites-green)]"
                 size={25}
               />
               <Twitter
-                className="transition hover:text-emerald-600"
+                className="transition hover:text-[var(--diabites-green)]"
                 size={25}
               />
               <Instagram
-                className="transition hover:text-emerald-600"
+                className="transition hover:text-[var(--diabites-green)]"
                 size={25}
               />
               <Youtube
-                className="transition hover:text-emerald-600"
+                className="transition hover:text-[var(--diabites-green)]"
                 size={27}
               />
             </div>
@@ -682,25 +683,25 @@ const Footer = () => {
               <li>
                 <a
                   href="#beranda"
-                  className="transition hover:text-emerald-600"
+                  className="transition hover:text-[var(--diabites-green)]"
                 >
                   Beranda
                 </a>
               </li>
               <li>
-                <a href="#fitur" className="transition hover:text-emerald-600">
+                <a href="#fitur" className="transition hover:text-[var(--diabites-green)]">
                   Fitur
                 </a>
               </li>
               <li>
-                <a href="#alur" className="transition hover:text-emerald-600">
+                <a href="#alur" className="transition hover:text-[var(--diabites-green)]">
                   Alur
                 </a>
               </li>
               <li>
                 <a
                   href="#komunitas"
-                  className="transition hover:text-emerald-600"
+                  className="transition hover:text-[var(--diabites-green)]"
                 >
                   Komunitas
                 </a>
@@ -712,22 +713,22 @@ const Footer = () => {
             <h3 className="text-lg font-bold text-slate-900">Lainnya</h3>
             <ul className="mt-7 space-y-5 text-base text-slate-600">
               <li>
-                <a href="#" className="transition hover:text-emerald-600">
+                <a href="#" className="transition hover:text-[var(--diabites-green)]">
                   FAQ
                 </a>
               </li>
               <li>
-                <a href="#" className="transition hover:text-emerald-600">
+                <a href="#" className="transition hover:text-[var(--diabites-green)]">
                   Bantuan
                 </a>
               </li>
               <li>
-                <a href="#" className="transition hover:text-emerald-600">
+                <a href="#" className="transition hover:text-[var(--diabites-green)]">
                   Kebijakan Privasi
                 </a>
               </li>
               <li>
-                <a href="#" className="transition hover:text-emerald-600">
+                <a href="#" className="transition hover:text-[var(--diabites-green)]">
                   Syarat dan Ketentuan
                 </a>
               </li>
@@ -741,7 +742,7 @@ const Footer = () => {
 
             <div className="mt-7 space-y-3">
               <div className="rounded-2xl border border-slate-200 bg-slate-950 px-5 py-4 text-white shadow-sm">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-300">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--diabites-green-panel)]">
                   Progressive Web App
                 </p>
                 <p className="mt-1 text-lg font-bold leading-tight">
@@ -750,7 +751,7 @@ const Footer = () => {
               </div>
             </div>
 
-            <div className="mt-10 rounded-[1.6rem] border border-emerald-100 bg-emerald-50/80 p-5">
+            <div className="mt-10 rounded-[1.6rem] border border-[var(--diabites-green-border)] bg-[var(--diabites-green-soft)] p-5">
               <p className="text-sm font-semibold leading-6 text-slate-700">
                 DiaBites membantu pengguna membaca dan memahami informasi gizi
                 pada produk makanan maupun minuman.

@@ -13,10 +13,10 @@ const BottomBar = () => {
           <NavLink
             to="/scanner"
             className={({ isActive }) =>
-              `absolute -top-6 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full border-[6px] border-white shadow-[0_20px_40px_rgba(16,185,129,0.32)] transition-all duration-200 hover:scale-[1.04] active:scale-95 ${
+              `absolute -top-6 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full border-[6px] border-white shadow-[0_20px_40px_var(--diabites-green-shadow)] transition-all duration-200 hover:scale-[1.04] active:scale-95 ${
                 isActive
-                  ? "bg-[linear-gradient(135deg,#0f766e_0%,#10b981_52%,#22c55e_100%)]"
-                  : "bg-[linear-gradient(135deg,#14b8a6_0%,#10b981_54%,#22c55e_100%)]"
+                  ? "bg-[var(--diabites-green-dark)]"
+                  : "bg-[var(--diabites-green)]"
               }`
             }
           >
@@ -40,7 +40,7 @@ const NavItem = ({ to, icon, label }) => {
           <div
             className={`rounded-2xl p-2 transition-all duration-200 ${
               isActive
-                ? "bg-emerald-50 text-emerald-700 shadow-[0_10px_24px_rgba(16,185,129,0.12)]"
+                ? "bg-[var(--diabites-green-soft)] text-[var(--diabites-green)] shadow-[0_10px_24px_var(--diabites-green-shadow-soft)]"
                 : "text-slate-400 group-hover:bg-slate-50 group-hover:text-slate-700"
             }`}
           >
@@ -48,7 +48,7 @@ const NavItem = ({ to, icon, label }) => {
           </div>
           <span
             className={`text-[10px] font-semibold tracking-[0.01em] ${
-              isActive ? "text-emerald-700" : "text-slate-500"
+              isActive ? "text-[var(--diabites-green)]" : "text-slate-500"
             }`}
           >
             {label}

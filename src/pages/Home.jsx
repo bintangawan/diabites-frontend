@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Activity,
@@ -29,41 +29,55 @@ const getTodayRange = () => {
 };
 
 const Home = () => {
-  const { userProfile, dashboard } = useUser();
+  const { userProfile, dashboard, refreshDashboard } = useUser();
   const [todayTotals, setTodayTotals] = useState({ sugar: 0, carbohydrates: 0 });
 
+  const loadTodayTotals = useCallback(async (isMountedRef) => {
+    try {
+      const { items } = await scanApi.getHistory({
+        ...getTodayRange(),
+        page: 1,
+        limit: 100,
+      });
+
+      if (!isMountedRef.current) {
+        return;
+      }
+
+      setTodayTotals({
+        sugar: items.reduce((total, item) => total + Number(item.sugar || 0), 0),
+        carbohydrates: items.reduce((total, item) => total + Number(item.carbohydrates || 0), 0),
+      });
+    } catch {
+      if (isMountedRef.current) {
+        setTodayTotals({ sugar: 0, carbohydrates: 0 });
+      }
+    }
+  }, []);
+
   useEffect(() => {
-    let isMounted = true;
+    const isMountedRef = { current: true };
 
-    const loadTodayTotals = async () => {
+    loadTodayTotals(isMountedRef);
+
+    const handleDataRefresh = async () => {
       try {
-        const { items } = await scanApi.getHistory({
-          ...getTodayRange(),
-          page: 1,
-          limit: 100,
-        });
-
-        if (!isMounted) {
-          return;
-        }
-
-        setTodayTotals({
-          sugar: items.reduce((total, item) => total + Number(item.sugar || 0), 0),
-          carbohydrates: items.reduce((total, item) => total + Number(item.carbohydrates || 0), 0),
-        });
+        await refreshDashboard();
+        await loadTodayTotals(isMountedRef);
       } catch {
-        if (isMounted) {
+        if (isMountedRef.current) {
           setTodayTotals({ sugar: 0, carbohydrates: 0 });
         }
       }
     };
 
-    loadTodayTotals();
+    window.addEventListener('diabites:data-refresh', handleDataRefresh);
 
     return () => {
-      isMounted = false;
+      isMountedRef.current = false;
+      window.removeEventListener('diabites:data-refresh', handleDataRefresh);
     };
-  }, [userProfile?.id]);
+  }, [loadTodayTotals, refreshDashboard, userProfile?.id]);
 
   const userName = userProfile?.name || 'Pengguna DiaBites';
   const profilePhotoUrl = buildAssetUrl(userProfile?.profilePhoto);
@@ -85,7 +99,7 @@ const Home = () => {
       value: userProfile?.weight ? `${userProfile.weight} kg` : '-',
       detail: 'dipakai untuk target personal',
       icon: Target,
-      iconClass: 'bg-emerald-50 text-emerald-600',
+      iconClass: 'bg-[var(--diabites-green-soft)] text-[var(--diabites-green)]',
     },
     {
       label: 'Kondisi',
@@ -117,8 +131,8 @@ const Home = () => {
   ];
 
   return (
-    <div className="relative overflow-hidden px-4 pb-10 pt-5 sm:px-5">
-      <div className="absolute -right-10 -top-8 h-40 w-40 rounded-full bg-emerald-200/50 blur-3xl" />
+    <div className="relative min-h-full overflow-hidden px-4 pb-10 pt-5 sm:px-5">
+      <div className="absolute -right-10 -top-8 h-40 w-40 rounded-full bg-[var(--diabites-green-panel-glow)] blur-3xl" />
       <div className="absolute -left-12 top-32 h-32 w-32 rounded-full bg-sky-200/40 blur-3xl" />
 
       <header className="relative mb-6 flex items-start justify-between gap-4">
@@ -132,7 +146,13 @@ const Home = () => {
           </p>
         </div>
 
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-[1.4rem] bg-[linear-gradient(135deg,#14b8a6_0%,#10b981_55%,#22c55e_100%)] text-lg font-bold text-white shadow-[0_20px_40px_rgba(16,185,129,0.28)]">
+        <div
+          className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-[1.4rem] text-lg font-bold text-white"
+          style={{
+            backgroundColor: 'var(--diabites-green)',
+            boxShadow: '0 20px 40px var(--diabites-green-shadow)',
+          }}
+        >
           {profilePhotoUrl ? (
             <img src={profilePhotoUrl} alt={userName} className="h-full w-full object-cover" />
           ) : (
@@ -143,9 +163,13 @@ const Home = () => {
 
       <Card
         noPadding
-        className="relative mb-6 overflow-hidden border-emerald-200/80 bg-[linear-gradient(135deg,#0f766e_0%,#10b981_48%,#22c55e_100%)] text-white shadow-[0_24px_60px_rgba(16,185,129,0.22)]"
+        className="relative mb-6 overflow-hidden text-white"
+        style={{
+          backgroundColor: 'var(--diabites-green)',
+          borderColor: 'var(--diabites-green-border)',
+          boxShadow: '0 24px 60px var(--diabites-green-shadow)',
+        }}
       >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.28),transparent_36%)]" />
         <div className="relative p-5 sm:p-6">
           <div className="mb-5 flex items-start justify-between gap-3">
             <div>
@@ -154,47 +178,47 @@ const Home = () => {
                 Daily Wellness
               </span>
               <h2 className="mt-3 text-2xl font-bold">Target Kalori Harian</h2>
-              <p className="mt-2 max-w-[15rem] text-sm leading-relaxed text-emerald-50/90">
+              <p className="mt-2 max-w-[15rem] text-sm leading-relaxed text-white/88">
                 Jaga porsi tetap seimbang agar energi harian terpenuhi tanpa membuat kadar gula melonjak.
               </p>
             </div>
-            <div className="rounded-2xl bg-white/16 p-3 text-white/90 shadow-lg shadow-emerald-950/10">
+            <div className="rounded-2xl bg-white/14 p-3 text-white/90 shadow-lg shadow-black/10">
               <Target size={28} />
             </div>
           </div>
 
           <div className="mb-4 flex items-end justify-between gap-3">
             <h3 className="text-3xl font-bold tracking-tight">
-              {calorieLimit ? calorieLimit.toLocaleString('id-ID') : '-'} <span className="text-lg font-medium text-emerald-100">kcal</span>
+              {calorieLimit ? calorieLimit.toLocaleString('id-ID') : '-'} <span className="text-lg font-medium text-white/74">kcal</span>
             </h3>
             <span className="rounded-full bg-white/14 px-3 py-1 text-xs font-semibold text-white/90">
               {Math.round(progress)}% terpenuhi
             </span>
           </div>
 
-          <div className="mb-2 h-3 w-full overflow-hidden rounded-full bg-emerald-950/20">
+          <div className="mb-2 h-3 w-full overflow-hidden rounded-full bg-white/18">
             <div
-              className="h-full rounded-full bg-[linear-gradient(90deg,#fefce8_0%,#ffffff_50%,#dcfce7_100%)]"
+              className="h-full rounded-full bg-white"
               style={{ width: `${progress}%` }}
             />
           </div>
 
-          <div className="flex items-center justify-between text-xs text-emerald-50/90">
+          <div className="flex items-center justify-between text-xs text-white/84">
             <span>Terisi {todayCalories.toLocaleString('id-ID')} kcal hari ini</span>
             <span>Sisa {remainingCalories.toLocaleString('id-ID')} kcal</span>
           </div>
 
           <div className="mt-5 grid grid-cols-3 gap-3">
             <div className="rounded-2xl border border-white/18 bg-white/12 px-3 py-3 backdrop-blur-sm">
-              <p className="text-[11px] uppercase tracking-[0.12em] text-emerald-50/75">Gula</p>
+              <p className="text-[11px] uppercase tracking-[0.12em] text-white/70">Gula</p>
               <p className="mt-1 text-lg font-semibold">{todayTotals.sugar.toLocaleString('id-ID')} g</p>
             </div>
             <div className="rounded-2xl border border-white/18 bg-white/12 px-3 py-3 backdrop-blur-sm">
-              <p className="text-[11px] uppercase tracking-[0.12em] text-emerald-50/75">Karbo</p>
+              <p className="text-[11px] uppercase tracking-[0.12em] text-white/70">Karbo</p>
               <p className="mt-1 text-lg font-semibold">{todayTotals.carbohydrates.toLocaleString('id-ID')} g</p>
             </div>
             <div className="rounded-2xl border border-white/18 bg-white/12 px-3 py-3 backdrop-blur-sm">
-              <p className="text-[11px] uppercase tracking-[0.12em] text-emerald-50/75">Target</p>
+              <p className="text-[11px] uppercase tracking-[0.12em] text-white/70">Target</p>
               <p className="mt-1 text-lg font-semibold">{targetLabel}</p>
             </div>
           </div>
@@ -203,7 +227,7 @@ const Home = () => {
 
       <div className="mb-4">
         <h3 className="flex items-center gap-2 text-lg font-bold text-slate-900">
-          <Activity size={18} className="text-emerald-600" />
+          <Activity size={18} className="text-[var(--diabites-green)]" />
           Ringkasan Profilmu
         </h3>
         <p className="mt-1 text-sm text-slate-500">
@@ -227,10 +251,10 @@ const Home = () => {
       </div>
 
       <div className="mt-4 grid gap-4">
-        <Card className="border-emerald-100/90">
+        <Card className="border-[var(--diabites-green-border)]">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-semibold text-emerald-700">
+              <span className="inline-flex items-center gap-2 rounded-full bg-[var(--diabites-green-soft)] px-3 py-1 text-[11px] font-semibold text-[var(--diabites-green)]">
                 <Camera size={14} />
                 Mulai lebih cepat
               </span>
@@ -248,18 +272,18 @@ const Home = () => {
 
           <Link
             to="/scanner"
-            className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-[linear-gradient(135deg,#0f766e_0%,#10b981_52%,#22c55e_100%)] px-4 py-3 text-sm font-semibold text-white shadow-[0_18px_36px_rgba(16,185,129,0.20)] transition-transform hover:-translate-y-0.5"
+            className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-[var(--diabites-green)] px-4 py-3 text-sm font-semibold text-white shadow-[0_18px_36px_var(--diabites-green-shadow)] transition-transform hover:-translate-y-0.5 hover:bg-[var(--diabites-green-dark)]"
           >
             Buka Scanner
             <ArrowRight size={16} />
           </Link>
         </Card>
 
-        <Card className="border-white/90 bg-[linear-gradient(180deg,rgba(255,255,255,0.97)_0%,rgba(240,253,250,0.92)_100%)]">
+        <Card className="border-white/90 bg-[var(--diabites-green-surface)]">
           <div className="flex items-start justify-between gap-3">
             <div>
               <h3 className="flex items-center gap-2 text-lg font-bold text-slate-900">
-                <HeartPulse size={18} className="text-emerald-600" />
+                <HeartPulse size={18} className="text-[var(--diabites-green)]" />
                 Aktivitas Sehat Hari Ini
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-slate-600">
@@ -275,9 +299,9 @@ const Home = () => {
             {dailyChecklist.map((item) => (
               <div
                 key={item}
-                className="flex items-start gap-3 rounded-2xl border border-emerald-100/80 bg-white/90 px-4 py-3"
+                className="flex items-start gap-3 rounded-2xl border border-[var(--diabites-green-border)] bg-white/90 px-4 py-3"
               >
-                <div className="mt-0.5 rounded-full bg-emerald-100 p-1 text-emerald-700">
+                <div className="mt-0.5 rounded-full bg-[var(--diabites-green-soft)] p-1 text-[var(--diabites-green)]">
                   <ShieldCheck size={14} />
                 </div>
                 <p className="text-sm leading-relaxed text-slate-600">{item}</p>

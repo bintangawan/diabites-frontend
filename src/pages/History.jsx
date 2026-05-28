@@ -4,6 +4,7 @@ import { ChevronRight, Filter, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Card } from '../components/common/Card';
 import { Badge } from '../components/common/Badge';
+import ImagePreviewModal from '../components/common/ImagePreviewModal';
 import { useUser } from '../context/UserContext';
 import { extractErrorMessage, scanApi } from '../services/api';
 import { toScanViewModel } from '../utils/viewModels';
@@ -14,6 +15,7 @@ const History = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [historyItems, setHistoryItems] = useState([]);
+  const [previewImage, setPreviewImage] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -51,13 +53,13 @@ const History = () => {
   ), [historyItems, searchTerm, userProfile?.healthProfile]);
 
   return (
-    <div className="flex flex-col h-full bg-slate-50 pb-20">
+    <div className="flex min-h-full flex-col bg-slate-50 pb-44">
       <div className="px-6 py-4 bg-white mb-2 shadow-sm">
         <h1 className="text-lg font-bold text-slate-900">Riwayat Scan</h1>
         <p className="text-xs text-slate-500">Daftar produk yang pernah Anda analisis</p>
       </div>
 
-      <div className="p-4">
+      <div className="p-4 pb-10">
         <div className="flex gap-3 mb-6">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
@@ -66,7 +68,7 @@ const History = () => {
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
               placeholder="Cari produk..."
-              className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-teal-100 focus:border-teal-500 outline-none transition-all"
+              className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-10 pr-4 outline-none transition-all focus:border-[var(--diabites-green)] focus:ring-2 focus:ring-[var(--diabites-green-ring)]"
             />
           </div>
           <button
@@ -92,15 +94,28 @@ const History = () => {
             <Card
               key={item.id}
               noPadding
-              className="cursor-pointer hover:border-teal-300 transition-all hover:shadow-md"
+              className="cursor-pointer transition-all hover:border-[var(--diabites-green-border)] hover:shadow-md"
             >
               <div
                 className="p-4 flex items-start gap-3"
                 onClick={() => navigate(`/history/${item.id}`)}
               >
-                <div className="w-12 h-12 shrink-0 bg-slate-100 rounded-xl flex items-center justify-center text-lg font-bold text-slate-400">
-                  {item.name.charAt(0)}
-                </div>
+                <button
+                  type="button"
+                  className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-slate-100 text-lg font-bold text-slate-400"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    if (item.imageUrl) {
+                      setPreviewImage({ src: item.imageUrl, alt: item.name });
+                    }
+                  }}
+                >
+                  {item.imageUrl ? (
+                    <img src={item.imageUrl} alt={item.name} className="h-full w-full object-cover" />
+                  ) : (
+                    item.name.charAt(0)
+                  )}
+                </button>
 
                 <div className="flex-1 min-w-0 pt-0.5">
                   <h3 className="font-bold text-slate-900 text-sm truncate">{item.name}</h3>
@@ -108,7 +123,7 @@ const History = () => {
 
                   <div className="flex items-center gap-3 text-xs text-slate-500">
                     <span className="flex items-center gap-1 whitespace-nowrap">Kal {item.nutrition.calories} kcal</span>
-                    <span className={`flex items-center gap-1 whitespace-nowrap ${item.nutrition.sugar > 10 ? 'text-rose-500 font-medium' : 'text-emerald-500 font-medium'}`}>
+                    <span className={`flex items-center gap-1 whitespace-nowrap ${item.nutrition.sugar > 10 ? 'text-rose-500 font-medium' : 'text-[var(--diabites-green)] font-medium'}`}>
                       Gula {item.nutrition.sugar}g
                     </span>
                   </div>
@@ -123,6 +138,13 @@ const History = () => {
           ))}
         </div>
       </div>
+
+      <ImagePreviewModal
+        src={previewImage?.src}
+        alt={previewImage?.alt}
+        isOpen={Boolean(previewImage)}
+        onClose={() => setPreviewImage(null)}
+      />
     </div>
   );
 };

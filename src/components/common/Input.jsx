@@ -8,7 +8,7 @@ export const Input = ({ label, error, icon, rightIcon, className = '', ...props 
         )}
         <input
           className={`w-full px-4 py-3 rounded-xl border ${
-            error ? 'border-orange-300 focus:ring-orange-100 focus:border-orange-400' : 'border-slate-200 focus:border-emerald-400 focus:ring-emerald-100'
+            error ? 'border-orange-300 focus:ring-orange-100 focus:border-orange-400' : 'border-slate-200 focus:border-[var(--diabites-green)] focus:ring-[var(--diabites-green-ring)]'
           } bg-white/95 outline-none shadow-sm focus:ring-4 transition-all ${icon ? 'pl-11' : ''} ${rightIcon ? 'pr-11' : ''}`}
           {...props}
         />

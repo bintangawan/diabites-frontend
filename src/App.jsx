@@ -35,9 +35,9 @@ const ScrollToTop = () => {
 };
 
 const BootSplash = () => (
-  <div className="flex min-h-screen items-center justify-center bg-[linear-gradient(180deg,#effcf5_0%,#eef9ff_54%,#fffdf5_100%)] px-6">
+  <div className="flex min-h-screen items-center justify-center bg-[var(--diabites-green-surface)] px-6">
     <div className="rounded-[2rem] border border-white/80 bg-white/90 px-6 py-5 text-center shadow-[0_24px_60px_rgba(15,23,42,0.08)]">
-      <div className="mx-auto mb-3 h-12 w-12 animate-spin rounded-full border-4 border-emerald-100 border-t-emerald-500" />
+      <div className="mx-auto mb-3 h-12 w-12 animate-spin rounded-full border-4 border-[var(--diabites-green-soft)] border-t-[var(--diabites-green)]" />
       <p className="text-sm font-semibold text-slate-700">Menyiapkan akun Anda...</p>
     </div>
   </div>
@@ -78,7 +78,7 @@ function App() {
             color: '#0f172a',
             boxShadow: '0 18px 45px rgba(15, 23, 42, 0.12)',
           },
-          success: { iconTheme: { primary: '#10b981', secondary: '#fff' } },
+          success: { iconTheme: { primary: '#2a7c37', secondary: '#fff' } },
         }}
       />
 

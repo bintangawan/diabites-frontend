@@ -4,6 +4,7 @@ import { AlertTriangle, CheckCircle, ChevronLeft, XCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Card } from '../components/common/Card';
 import { Badge } from '../components/common/Badge';
+import ImagePreviewModal from '../components/common/ImagePreviewModal';
 import { useUser } from '../context/UserContext';
 import { extractErrorMessage, scanApi } from '../services/api';
 import { normalizeStatus } from '../utils/helpers';
@@ -15,6 +16,7 @@ const HistoryDetail = () => {
   const { userProfile } = useUser();
   const [isLoading, setIsLoading] = useState(true);
   const [scan, setScan] = useState(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -56,10 +58,10 @@ const HistoryDetail = () => {
     switch (normalizeStatus(status)) {
       case 'recommended':
         return {
-          icon: <CheckCircle size={32} className="text-emerald-600" />,
-          bg: 'bg-emerald-50',
-          border: 'border-emerald-200',
-          text: 'text-emerald-900',
+          icon: <CheckCircle size={32} className="text-[var(--diabites-green)]" />,
+          bg: 'bg-[var(--diabites-green-soft)]',
+          border: 'border-[var(--diabites-green-border)]',
+          text: 'text-[var(--diabites-green-dark)]',
         };
       case 'caution':
         return {
@@ -112,11 +114,15 @@ const HistoryDetail = () => {
       </header>
 
       <div className="p-4 space-y-4 pb-24">
-        <div className="w-full h-48 bg-slate-200 rounded-2xl overflow-hidden flex items-center justify-center border border-slate-200 shadow-inner relative">
+        <button
+          type="button"
+          onClick={() => item.imageUrl && setIsPreviewOpen(true)}
+          className="relative flex h-48 w-full items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-200 shadow-inner"
+        >
           {item.imageUrl ? (
             <img src={item.imageUrl} alt={item.name} className="absolute inset-0 h-full w-full object-cover" />
           ) : null}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent" />
+          <div className="absolute inset-0 bg-slate-950/20" />
           {!item.imageUrl && (
             <span className="text-6xl font-bold text-slate-300 drop-shadow-md">
               {item.name.charAt(0)}
@@ -125,7 +131,7 @@ const HistoryDetail = () => {
           <div className="absolute bottom-4 left-4 right-4 text-white">
             <h2 className="text-xl font-bold">{item.name}</h2>
           </div>
-        </div>
+        </button>
 
         <Card noPadding className={`${statusUI.border} ${statusUI.bg} overflow-hidden`}>
           <div className="p-5 flex items-start gap-4">
@@ -168,6 +174,13 @@ const HistoryDetail = () => {
           </div>
         </Card>
       </div>
+
+      <ImagePreviewModal
+        src={item.imageUrl}
+        alt={item.name}
+        isOpen={isPreviewOpen}
+        onClose={() => setIsPreviewOpen(false)}
+      />
     </div>
   );
 };

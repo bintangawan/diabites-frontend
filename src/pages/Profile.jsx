@@ -180,7 +180,7 @@ const Profile = () => {
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="w-16 h-16 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center overflow-hidden text-white text-xl font-bold shadow-md"
+          className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-[var(--diabites-green)] text-xl font-bold text-white shadow-md"
         >
           {profilePhotoUrl ? (
             <img src={profilePhotoUrl} alt={userProfile?.name || 'Foto profil'} className="h-full w-full object-cover" />
@@ -308,7 +308,7 @@ const Profile = () => {
 const MenuItem = ({ icon, label, onClick, color }) => {
   const colorMap = {
     blue: 'bg-blue-50 text-blue-600',
-    green: 'bg-green-50 text-green-600',
+    green: 'bg-[var(--diabites-green-soft)] text-[var(--diabites-green)]',
     purple: 'bg-purple-50 text-purple-600',
     gray: 'bg-gray-50 text-gray-600',
   };

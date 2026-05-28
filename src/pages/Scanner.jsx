@@ -269,9 +269,9 @@ const Scanner = () => {
 
   return (
     <div className="fixed inset-0 z-[100] overflow-hidden bg-[#041722] text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-10%,rgba(45,212,191,0.35),transparent_34%),radial-gradient(circle_at_100%_10%,rgba(59,130,246,0.18),transparent_28%),linear-gradient(180deg,#082437_0%,#061523_52%,#020617_100%)]" />
-      <div className="absolute left-1/2 top-0 h-56 w-56 -translate-x-1/2 rounded-full bg-emerald-300/20 blur-3xl" />
-      <div className="absolute -left-20 bottom-24 h-52 w-52 rounded-full bg-cyan-400/10 blur-3xl" />
+      <div className="absolute inset-0 bg-[#071b14]" />
+      <div className="absolute left-1/2 top-0 h-56 w-56 -translate-x-1/2 rounded-full bg-[var(--diabites-green-soft-glow)] blur-3xl" />
+      <div className="absolute -left-20 bottom-24 h-52 w-52 rounded-full bg-[var(--diabites-green-soft-glow)] blur-3xl" />
 
       <div className="relative mx-auto flex h-[100dvh] w-full max-w-md flex-col px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-[max(0.9rem,env(safe-area-inset-top))] sm:px-5">
         <div className="flex items-center justify-between gap-3">
@@ -316,7 +316,7 @@ const Scanner = () => {
             }`}
           />
 
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(2,6,23,0.12)_0%,rgba(2,6,23,0.04)_42%,rgba(2,6,23,0.42)_100%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-slate-950/22" />
           <div className="scanner-soft-grid pointer-events-none absolute inset-0 opacity-45" />
 
           <div className="pointer-events-none absolute inset-x-0 top-5 flex justify-center px-5">
@@ -324,7 +324,7 @@ const Scanner = () => {
               <span
                 className={`h-2 w-2 rounded-full ${
                   cameraStatus === "ready"
-                    ? "bg-emerald-300 shadow-[0_0_12px_rgba(110,231,183,0.9)]"
+                    ? "bg-[var(--diabites-green-panel)] shadow-[0_0_12px_var(--diabites-green-shadow)]"
                     : cameraStatus === "error"
                       ? "bg-orange-300"
                       : "animate-pulse bg-sky-300"
@@ -340,7 +340,7 @@ const Scanner = () => {
                 <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/[0.14]">
                   <LoaderCircle
                     size={30}
-                    className="animate-spin text-emerald-300"
+                    className="animate-spin text-[var(--diabites-green-panel)]"
                   />
                 </div>
                 <p className="mt-4 text-sm font-bold text-white">
@@ -382,13 +382,13 @@ const Scanner = () => {
               <div className="pointer-events-none absolute inset-x-7 bottom-40 top-24 rounded-[2rem] border border-white/[0.16] bg-white/[0.03] shadow-[inset_0_0_28px_rgba(255,255,255,0.07)]" />
 
               <div className="pointer-events-none absolute inset-x-8 bottom-44 top-28 rounded-[1.9rem]">
-                <div className="absolute left-0 top-0 h-16 w-16 rounded-tl-[1.55rem] border-l-[5px] border-t-[5px] border-emerald-300 shadow-[0_0_18px_rgba(52,211,153,0.65)]" />
-                <div className="absolute right-0 top-0 h-16 w-16 rounded-tr-[1.55rem] border-r-[5px] border-t-[5px] border-emerald-300 shadow-[0_0_18px_rgba(52,211,153,0.65)]" />
-                <div className="absolute bottom-0 left-0 h-16 w-16 rounded-bl-[1.55rem] border-b-[5px] border-l-[5px] border-emerald-300 shadow-[0_0_18px_rgba(52,211,153,0.65)]" />
-                <div className="absolute bottom-0 right-0 h-16 w-16 rounded-br-[1.55rem] border-b-[5px] border-r-[5px] border-emerald-300 shadow-[0_0_18px_rgba(52,211,153,0.65)]" />
+                <div className="absolute left-0 top-0 h-16 w-16 rounded-tl-[1.55rem] border-l-[5px] border-t-[5px] border-[var(--diabites-green-tint)] shadow-[0_0_18px_var(--diabites-green-shadow)]" />
+                <div className="absolute right-0 top-0 h-16 w-16 rounded-tr-[1.55rem] border-r-[5px] border-t-[5px] border-[var(--diabites-green-tint)] shadow-[0_0_18px_var(--diabites-green-shadow)]" />
+                <div className="absolute bottom-0 left-0 h-16 w-16 rounded-bl-[1.55rem] border-b-[5px] border-l-[5px] border-[var(--diabites-green-tint)] shadow-[0_0_18px_var(--diabites-green-shadow)]" />
+                <div className="absolute bottom-0 right-0 h-16 w-16 rounded-br-[1.55rem] border-b-[5px] border-r-[5px] border-[var(--diabites-green-tint)] shadow-[0_0_18px_var(--diabites-green-shadow)]" />
 
                 <div className="scanner-sweep-qris absolute inset-x-5 bottom-5 top-5">
-                  <span className="absolute left-0 right-0 top-0 h-[3px] rounded-full bg-[linear-gradient(90deg,transparent_0%,#5eead4_18%,#ecfeff_50%,#5eead4_82%,transparent_100%)] shadow-[0_0_22px_rgba(94,234,212,0.95)]" />
+                  <span className="absolute left-4 right-4 top-0 h-[3px] rounded-full bg-[var(--diabites-green-panel)] shadow-[0_0_22px_var(--diabites-green-shadow)]" />
                 </div>
               </div>
 
@@ -420,8 +420,8 @@ const Scanner = () => {
                   disabled={cameraStatus !== "ready" || isCapturing}
                   className="relative flex h-[64px] w-[64px] items-center justify-center rounded-full transition active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  <span className="absolute inset-[-5px] rounded-full bg-emerald-300/20 blur-md" />
-                  <span className="relative flex h-full w-full items-center justify-center rounded-full border-[5px] border-white/90 bg-[linear-gradient(135deg,#34d399_0%,#14b8a6_55%,#06b6d4_100%)] text-white shadow-[0_14px_32px_rgba(20,184,166,0.34)]">
+                  <span className="absolute inset-[-5px] rounded-full bg-[var(--diabites-green-soft-glow)] blur-md" />
+                  <span className="relative flex h-full w-full items-center justify-center rounded-full border-[5px] border-white/90 bg-[var(--diabites-green)] text-white shadow-[0_14px_32px_var(--diabites-green-shadow)]">
                     {isCapturing ? (
                       <LoaderCircle size={24} className="animate-spin" />
                     ) : (

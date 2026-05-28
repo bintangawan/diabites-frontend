@@ -16,7 +16,7 @@
     <meta name="googlebot" content="index, follow, max-image-preview:large" />
     <meta name="author" content="DiaBites" />
     <meta name="application-name" content="DiaBites" />
-    <meta name="theme-color" content="#0f766e" />
+    <meta name="theme-color" content="#8bb993" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -51,6 +51,31 @@
       content="Aplikasi PWA DiaBites membantu scan label gizi, membaca gula dan kalori, serta memudahkan keputusan konsumsi harian."
     />
     <meta name="twitter:image" content="https://diabites.id/images/pwa-512x512.png" />
+
+    <script>
+      (function () {
+        var localHosts = ['localhost', '127.0.0.1', '::1'];
+        if (!localHosts.includes(window.location.hostname)) {
+          return;
+        }
+
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function (registrations) {
+            registrations.forEach(function (registration) {
+              registration.unregister();
+            });
+          });
+        }
+
+        if ('caches' in window) {
+          caches.keys().then(function (cacheKeys) {
+            cacheKeys.forEach(function (cacheKey) {
+              caches.delete(cacheKey);
+            });
+          });
+        }
+      }());
+    </script>
 
     <script type="application/ld+json">
       {

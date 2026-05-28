@@ -74,9 +74,9 @@ const PWAInstallPrompt = () => {
         hasBottomBar ? 'bottom-24' : 'bottom-4'
       }`}
     >
-      <div className="w-full max-w-md rounded-[1.8rem] border border-emerald-100/90 bg-white/96 p-4 shadow-[0_24px_60px_rgba(15,23,42,0.18)] backdrop-blur-xl">
+      <div className="w-full max-w-md rounded-[1.8rem] border border-[var(--diabites-green-border)] bg-white/96 p-4 shadow-[0_24px_60px_rgba(15,23,42,0.18)] backdrop-blur-xl">
         <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[var(--diabites-green-soft)] text-[var(--diabites-green)]">
             <Share2 size={20} />
           </div>
 
@@ -90,7 +90,7 @@ const PWAInstallPrompt = () => {
               <button
                 type="button"
                 onClick={handleIosHelp}
-                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-emerald-200 hover:text-emerald-700"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-[var(--diabites-green-border)] hover:text-[var(--diabites-green)]"
               >
                 <Share2 size={14} />
                 Lihat Cara

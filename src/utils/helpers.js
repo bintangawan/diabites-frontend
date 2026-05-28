@@ -15,7 +15,11 @@ export const normalizeStatus = (status) => (
 export const getStatusColor = (status) => {
   switch (normalizeStatus(status)) {
     case 'recommended':
-      return { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-200' };
+      return {
+        bg: 'bg-[var(--diabites-green-soft)]',
+        text: 'text-[var(--diabites-green)]',
+        border: 'border-[var(--diabites-green-border)]',
+      };
     case 'caution':
       return { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-200' };
     case 'not recommended':

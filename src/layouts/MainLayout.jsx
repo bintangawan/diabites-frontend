@@ -4,10 +4,10 @@ import GlobalHeader from '../components/layout/GlobalHeader';
 
 const MainLayout = () => {
   return (
-    <div className="min-h-screen bg-[linear-gradient(180deg,#effcf5_0%,#eef9ff_54%,#fffdf5_100%)] font-sans text-slate-900">
+    <div className="min-h-screen bg-[var(--diabites-green-surface)] font-sans text-slate-900">
       <main
         data-app-shell="true"
-        className="relative mx-auto flex h-[100dvh] w-full max-w-md flex-col overflow-hidden border-x border-white/60 bg-[linear-gradient(180deg,rgba(255,255,255,0.82)_0%,rgba(247,252,255,0.98)_45%,rgba(244,252,247,0.98)_100%)] shadow-[0_28px_90px_rgba(15,23,42,0.12)] backdrop-blur-xl"
+        className="relative mx-auto flex h-[100dvh] w-full max-w-md flex-col overflow-hidden border-x border-white/60 bg-white/96 shadow-[0_28px_90px_rgba(15,23,42,0.12)] backdrop-blur-xl"
       >
         <GlobalHeader />
 

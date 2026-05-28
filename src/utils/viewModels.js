@@ -14,7 +14,7 @@ const SCAN_NUTRIENT_CONFIG = [
   { key: 'calories', label: 'Kalori', unit: 'kcal', color: 'bg-sky-500', max: 500 },
   { key: 'sugar', label: 'Gula', unit: 'g', color: 'bg-amber-400', max: 50 },
   { key: 'carbohydrates', label: 'Karbohidrat', unit: 'g', color: 'bg-cyan-500', max: 100 },
-  { key: 'fat', label: 'Lemak', unit: 'g', color: 'bg-emerald-500', max: 50 },
+  { key: 'fat', label: 'Lemak', unit: 'g', color: 'bg-[var(--diabites-green)]', max: 50 },
   { key: 'sodium', label: 'Sodium', unit: 'mg', color: 'bg-orange-400', max: 1000 },
 ];
 

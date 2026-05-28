@@ -13,6 +13,7 @@ import toast from 'react-hot-toast';
 import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
 import { Badge } from '../components/common/Badge';
+import ImagePreviewModal from '../components/common/ImagePreviewModal';
 import { Input } from '../components/common/Input';
 import { useUser } from '../context/UserContext';
 import { extractErrorMessage, scanApi } from '../services/api';
@@ -47,6 +48,12 @@ const persistDraft = (draft) => {
   sessionStorage.setItem(SCAN_DRAFT_STORAGE_KEY, JSON.stringify(draft));
 };
 
+const notifyDataRefresh = () => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('diabites:data-refresh'));
+  }
+};
+
 const normalizeDraft = (payload) => ({
   productName: payload.productName || '',
   imageUrl: payload.imageUrl,
@@ -76,7 +83,7 @@ const getAnalysisRequest = (scanKey, uploadedFile) => {
 const ScanResult = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { userProfile } = useUser();
+  const { userProfile, refreshDashboard } = useUser();
   const uploadedFile = location.state?.file || null;
   const previewUrl = location.state?.previewUrl || null;
   const scanKey = location.state?.scanKey || null;
@@ -85,6 +92,7 @@ const ScanResult = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [scanDraft, setScanDraft] = useState(() => readStoredDraft());
   const [editFormData, setEditFormData] = useState({});
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -162,7 +170,7 @@ const ScanResult = () => {
       calories: scanDraft.calories,
       sugar: scanDraft.sugar,
       carbohydrates: scanDraft.carbohydrates,
-      fat: scanDraft.fat,
+      fat: scanDraft.fat ?? 0,
       sodium: scanDraft.sodium,
     });
     setIsEditModalOpen(true);
@@ -211,7 +219,7 @@ const ScanResult = () => {
     setIsSaving(true);
 
     try {
-      const savedScan = await scanApi.save({
+      await scanApi.save({
         productName: scanDraft.productName,
         imageUrl: scanDraft.imageUrl,
         servingSize: scanDraft.servingSize,
@@ -224,8 +232,16 @@ const ScanResult = () => {
       });
 
       persistDraft(null);
+
+      try {
+        await refreshDashboard();
+        notifyDataRefresh();
+      } catch {
+        notifyDataRefresh();
+      }
+
       toast.success('Scan berhasil disimpan!');
-      navigate(`/history/${savedScan.id}`, { replace: true });
+      navigate('/scanner', { replace: true });
     } catch (error) {
       toast.error(extractErrorMessage(error));
     } finally {
@@ -235,11 +251,11 @@ const ScanResult = () => {
 
   if (isAnalyzing) {
     return (
-      <div className="min-h-screen bg-[linear-gradient(180deg,#effcf5_0%,#eef9ff_100%)] flex flex-col items-center justify-center p-6 text-center">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-[var(--diabites-green-surface)] p-6 text-center">
         <div className="relative mb-6 h-24 w-24">
-          <div className="absolute inset-0 rounded-full border-4 border-emerald-100" />
-          <div className="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin" />
-          <div className="absolute inset-0 flex items-center justify-center text-emerald-500">
+          <div className="absolute inset-0 rounded-full border-4 border-[var(--diabites-green-soft)]" />
+          <div className="absolute inset-0 animate-spin rounded-full border-4 border-[var(--diabites-green)] border-t-transparent" />
+          <div className="absolute inset-0 flex items-center justify-center text-[var(--diabites-green)]">
             <RefreshCw className="animate-pulse" size={32} />
           </div>
         </div>
@@ -256,7 +272,7 @@ const ScanResult = () => {
   }
 
   return (
-    <div className="relative min-h-screen bg-[linear-gradient(180deg,#effcf5_0%,#eef9ff_100%)] pb-24">
+    <div className="relative min-h-screen bg-[var(--diabites-green-surface)] pb-24">
       <header className="sticky top-0 z-20 flex items-center gap-4 border-b border-white/70 bg-white/82 px-4 py-4 shadow-[0_12px_30px_rgba(15,23,42,0.05)] backdrop-blur-xl">
         <button
           onClick={() => navigate('/home')}
@@ -272,16 +288,20 @@ const ScanResult = () => {
 
       <div className="mx-auto max-w-md space-y-4 p-4">
         <div className="overflow-hidden rounded-[28px] border border-white/80 bg-white/85 p-2 shadow-[0_18px_45px_rgba(15,23,42,0.08)]">
-          <div className="flex h-44 w-full items-center justify-center overflow-hidden rounded-[22px] border border-emerald-100 bg-slate-100 shadow-inner">
+          <button
+            type="button"
+            onClick={() => displayedImage && setIsPreviewOpen(true)}
+            className="flex h-44 w-full items-center justify-center overflow-hidden rounded-[22px] border border-[var(--diabites-green-border)] bg-slate-100 shadow-inner"
+          >
             {displayedImage ? (
               <img src={displayedImage} alt="Scanned Label" className="w-full h-full object-cover" />
             ) : (
               <span className="text-sm text-slate-400">Gambar Label Gizi</span>
             )}
-          </div>
+          </button>
         </div>
 
-        <Card noPadding className="overflow-hidden border-amber-200 bg-[linear-gradient(180deg,#fffdf2_0%,#ffffff_100%)]">
+        <Card noPadding className="overflow-hidden border-amber-200 bg-white">
           <div className="flex items-start gap-4 p-5">
             <div className="mt-1">
               <div className="rounded-2xl bg-amber-100 p-2.5 text-amber-700">
@@ -307,7 +327,7 @@ const ScanResult = () => {
 
             <button
               onClick={handleOpenEdit}
-              className="flex items-center gap-1.5 rounded-xl bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-100"
+              className="flex items-center gap-1.5 rounded-xl bg-[var(--diabites-green-soft)] px-3 py-2 text-sm font-medium text-[var(--diabites-green)] transition-colors hover:bg-[var(--diabites-green-panel)]"
             >
               <Edit2 size={16} /> Edit
             </button>
@@ -368,7 +388,7 @@ const ScanResult = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <Input type="number" label="Karbohidrat (g)" name="carbohydrates" value={editFormData.carbohydrates || ''} onChange={handleEditChange} required />
-                <Input type="number" label="Lemak (g)" name="fat" value={editFormData.fat || ''} onChange={handleEditChange} required />
+                <Input type="number" label="Lemak (g)" name="fat" value={editFormData.fat ?? 0} onChange={handleEditChange} required />
               </div>
 
               <Input type="number" label="Sodium / Natrium (mg)" name="sodium" value={editFormData.sodium || ''} onChange={handleEditChange} required />
@@ -382,6 +402,13 @@ const ScanResult = () => {
           </div>
         </div>
       )}
+
+      <ImagePreviewModal
+        src={displayedImage}
+        alt={scanView.name}
+        isOpen={isPreviewOpen}
+        onClose={() => setIsPreviewOpen(false)}
+      />
     </div>
   );
 };

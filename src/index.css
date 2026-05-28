@@ -8,12 +8,27 @@
 
 :root {
   color-scheme: light;
+  --diabites-green: #2a7c37;
+  --diabites-green-dark: #1f5f2b;
+  --diabites-green-deep: #184823;
+  --diabites-green-soft: #eaf6ed;
+  --diabites-green-surface: #f5fbf6;
+  --diabites-green-panel: #deeee1;
+  --diabites-green-border: #c7decb;
+  --diabites-green-tint: #8bb993;
+  --diabites-green-panel-glow: rgba(222, 238, 225, 0.72);
+  --diabites-green-soft-glow: rgba(234, 246, 237, 0.3);
+  --diabites-mint: #7debe2;
+  --diabites-mint-soft: #e8fffc;
+  --diabites-green-shadow: rgba(42, 124, 55, 0.22);
+  --diabites-green-shadow-soft: rgba(42, 124, 55, 0.12);
+  --diabites-green-ring: rgba(42, 124, 55, 0.14);
 }
 
 body {
   font-family: 'Poppins', sans-serif;
   min-height: 100vh;
-  background: linear-gradient(180deg, #effcf5 0%, #eef9ff 54%, #fffdf5 100%);
+  background: var(--diabites-green-surface);
   color: #0f172a;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -24,8 +39,8 @@ body {
 }
 
 ::selection {
-  background: #bbf7d0;
-  color: #134e4a;
+  background: var(--diabites-green-soft);
+  color: var(--diabites-green-dark);
 }
 
 .scanner-grid {
@@ -76,18 +91,18 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #a7f3d0;
+  background-color: #b8dec0;
   border-radius: 10px; /* Ujungnya dibuat membulat sempurna */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #6ee7b7;
+  background-color: var(--diabites-green);
 }
 
 /* Untuk Firefox */
 * {
   scrollbar-width: thin; /* Memaksa Firefox pakai scrollbar tipis */
-  scrollbar-color: #a7f3d0 transparent; /* Warna thumb dan track */
+  scrollbar-color: #b8dec0 transparent; /* Warna thumb dan track */
 }
 
 .scanner-soft-grid {

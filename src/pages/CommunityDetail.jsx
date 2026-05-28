@@ -199,7 +199,7 @@ const CommunityDetail = () => {
       <div className="p-4 overflow-y-auto">
         <div className="mb-4">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center overflow-hidden text-white font-bold shrink-0 shadow-sm">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[var(--diabites-green)] font-bold text-white shadow-sm">
               {thread.author.avatarUrl ? (
                 <img src={thread.author.avatarUrl} alt={thread.author.name} className="h-full w-full object-cover" />
               ) : (
@@ -229,7 +229,7 @@ const CommunityDetail = () => {
               <Heart size={18} fill={likedPost ? 'currentColor' : 'none'} /> {thread.likesCount}
             </button>
             <button
-              className="flex items-center gap-1.5 text-sm font-medium hover:text-teal-600 transition-colors"
+              className="flex items-center gap-1.5 text-sm font-medium transition-colors hover:text-[var(--diabites-green)]"
               onClick={() => setReplyingTo(null)}
             >
               <MessageCircle size={18} /> Balas
@@ -266,7 +266,7 @@ const CommunityDetail = () => {
                       <Heart size={14} fill={likedComments[comment.id] ? 'currentColor' : 'none'} /> {comment.likesCount || ''}
                     </button>
                     <button
-                      className="flex items-center gap-1 text-xs hover:text-teal-600 font-medium"
+                      className="flex items-center gap-1 text-xs font-medium hover:text-[var(--diabites-green)]"
                       onClick={() => setReplyingTo({ commentId: comment.id, name: comment.author.name })}
                     >
                       <MessageCircle size={14} /> Balas
@@ -317,7 +317,7 @@ const CommunityDetail = () => {
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-slate-200 p-3 z-40 pb-safe">
         {replyingTo && (
           <div className="flex items-center justify-between px-2 pb-2 mb-2 border-b border-slate-100 text-xs">
-            <span className="text-slate-500">Membalas <span className="font-bold text-teal-600">@{replyingTo.name}</span></span>
+            <span className="text-slate-500">Membalas <span className="font-bold text-[var(--diabites-green)]">@{replyingTo.name}</span></span>
             <button onClick={() => setReplyingTo(null)} className="text-slate-400 hover:text-slate-700 font-bold px-2">Batal</button>
           </div>
         )}
@@ -327,13 +327,13 @@ const CommunityDetail = () => {
             value={replyText}
             onChange={(event) => setReplyText(event.target.value)}
             placeholder={replyingTo ? `Balas @${replyingTo.name}...` : 'Tambahkan komentar...'}
-            className="flex-1 bg-slate-100 px-4 py-2.5 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-teal-500 transition-all resize-none max-h-24 min-h-[44px]"
+            className="flex-1 resize-none rounded-2xl bg-slate-100 px-4 py-2.5 text-sm outline-none transition-all focus:ring-2 focus:ring-[var(--diabites-green)] max-h-24 min-h-[44px]"
             rows="1"
           />
           <button
             type="submit"
             disabled={!replyText.trim() || isSubmitting}
-            className="w-11 h-11 bg-teal-600 text-white rounded-full flex items-center justify-center disabled:opacity-50 disabled:bg-slate-300 transition-colors shrink-0"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--diabites-green)] text-white transition-colors disabled:bg-slate-300 disabled:opacity-50"
           >
             {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} className="ml-0.5 -mt-0.5" />}
           </button>
