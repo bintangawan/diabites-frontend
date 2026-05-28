@@ -1,6 +1,5 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useUser } from '../context/UserContext.jsx';
-import { Card } from '../components/common/Card';
 import {
   Activity,
   ArrowRight,
@@ -11,19 +10,74 @@ import {
   Target,
   TrendingUp,
 } from 'lucide-react';
+import { useUser } from '../context/UserContext.jsx';
+import { Card } from '../components/common/Card';
+import { buildAssetUrl, scanApi } from '../services/api';
+import { formatDiabetesType, getInitials } from '../utils/helpers';
+
+const getTodayRange = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const date = String(today.getDate()).padStart(2, '0');
+  const value = `${year}-${month}-${date}`;
+
+  return {
+    startDate: value,
+    endDate: value,
+  };
+};
 
 const Home = () => {
-  const { userProfile } = useUser();
-  const userName = userProfile?.name || 'Bintang Kurniawan';
+  const { userProfile, dashboard } = useUser();
+  const [todayTotals, setTodayTotals] = useState({ sugar: 0, carbohydrates: 0 });
 
-  const getInitials = (name) => {
-    return name
-      .split(' ')
-      .map((part) => part[0])
-      .join('')
-      .substring(0, 2)
-      .toUpperCase();
-  };
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadTodayTotals = async () => {
+      try {
+        const { items } = await scanApi.getHistory({
+          ...getTodayRange(),
+          page: 1,
+          limit: 100,
+        });
+
+        if (!isMounted) {
+          return;
+        }
+
+        setTodayTotals({
+          sugar: items.reduce((total, item) => total + Number(item.sugar || 0), 0),
+          carbohydrates: items.reduce((total, item) => total + Number(item.carbohydrates || 0), 0),
+        });
+      } catch {
+        if (isMounted) {
+          setTodayTotals({ sugar: 0, carbohydrates: 0 });
+        }
+      }
+    };
+
+    loadTodayTotals();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [userProfile?.id]);
+
+  const userName = userProfile?.name || 'Pengguna DiaBites';
+  const profilePhotoUrl = buildAssetUrl(userProfile?.profilePhoto);
+  const calorieLimit = Number(dashboard?.dailyCalorieLimit || 0);
+  const todayCalories = Number(dashboard?.todayCalories || 0);
+  const progress = calorieLimit ? Math.min((todayCalories / calorieLimit) * 100, 100) : 0;
+  const remainingCalories = calorieLimit ? Math.max(calorieLimit - todayCalories, 0) : 0;
+  const targetLabel = !calorieLimit
+    ? 'Belum ada'
+    : todayCalories > calorieLimit
+      ? 'Lewat'
+      : todayCalories > calorieLimit * 0.8
+        ? 'Terjaga'
+        : 'Stabil';
 
   const profileSummary = [
     {
@@ -35,7 +89,7 @@ const Home = () => {
     },
     {
       label: 'Kondisi',
-      value: userProfile?.diabetesType || '-',
+      value: userProfile?.diabetesType ? formatDiabetesType(userProfile.diabetesType) : '-',
       detail: 'profil rekomendasi aktif',
       icon: ShieldCheck,
       iconClass: 'bg-sky-50 text-sky-600',
@@ -78,8 +132,12 @@ const Home = () => {
           </p>
         </div>
 
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[1.4rem] bg-[linear-gradient(135deg,#14b8a6_0%,#10b981_55%,#22c55e_100%)] text-lg font-bold text-white shadow-[0_20px_40px_rgba(16,185,129,0.28)]">
-          {getInitials(userName)}
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-[1.4rem] bg-[linear-gradient(135deg,#14b8a6_0%,#10b981_55%,#22c55e_100%)] text-lg font-bold text-white shadow-[0_20px_40px_rgba(16,185,129,0.28)]">
+          {profilePhotoUrl ? (
+            <img src={profilePhotoUrl} alt={userName} className="h-full w-full object-cover" />
+          ) : (
+            getInitials(userName)
+          )}
         </div>
       </header>
 
@@ -107,37 +165,37 @@ const Home = () => {
 
           <div className="mb-4 flex items-end justify-between gap-3">
             <h3 className="text-3xl font-bold tracking-tight">
-              1,850 <span className="text-lg font-medium text-emerald-100">kcal</span>
+              {calorieLimit ? calorieLimit.toLocaleString('id-ID') : '-'} <span className="text-lg font-medium text-emerald-100">kcal</span>
             </h3>
             <span className="rounded-full bg-white/14 px-3 py-1 text-xs font-semibold text-white/90">
-              45% terpenuhi
+              {Math.round(progress)}% terpenuhi
             </span>
           </div>
 
           <div className="mb-2 h-3 w-full overflow-hidden rounded-full bg-emerald-950/20">
             <div
               className="h-full rounded-full bg-[linear-gradient(90deg,#fefce8_0%,#ffffff_50%,#dcfce7_100%)]"
-              style={{ width: '45%' }}
+              style={{ width: `${progress}%` }}
             />
           </div>
 
           <div className="flex items-center justify-between text-xs text-emerald-50/90">
-            <span>Terisi 830 kcal hari ini</span>
-            <span>Sisa 1,020 kcal</span>
+            <span>Terisi {todayCalories.toLocaleString('id-ID')} kcal hari ini</span>
+            <span>Sisa {remainingCalories.toLocaleString('id-ID')} kcal</span>
           </div>
 
           <div className="mt-5 grid grid-cols-3 gap-3">
             <div className="rounded-2xl border border-white/18 bg-white/12 px-3 py-3 backdrop-blur-sm">
               <p className="text-[11px] uppercase tracking-[0.12em] text-emerald-50/75">Gula</p>
-              <p className="mt-1 text-lg font-semibold">15 g</p>
+              <p className="mt-1 text-lg font-semibold">{todayTotals.sugar.toLocaleString('id-ID')} g</p>
             </div>
             <div className="rounded-2xl border border-white/18 bg-white/12 px-3 py-3 backdrop-blur-sm">
               <p className="text-[11px] uppercase tracking-[0.12em] text-emerald-50/75">Karbo</p>
-              <p className="mt-1 text-lg font-semibold">35 g</p>
+              <p className="mt-1 text-lg font-semibold">{todayTotals.carbohydrates.toLocaleString('id-ID')} g</p>
             </div>
             <div className="rounded-2xl border border-white/18 bg-white/12 px-3 py-3 backdrop-blur-sm">
               <p className="text-[11px] uppercase tracking-[0.12em] text-emerald-50/75">Target</p>
-              <p className="mt-1 text-lg font-semibold">Stabil</p>
+              <p className="mt-1 text-lg font-semibold">{targetLabel}</p>
             </div>
           </div>
         </div>
@@ -209,7 +267,7 @@ const Home = () => {
               </p>
             </div>
             <span className="rounded-full bg-orange-50 px-3 py-1 text-[11px] font-semibold text-orange-700">
-              3 langkah
+              {dashboard?.todayScansCount || 0} scan
             </span>
           </div>
 

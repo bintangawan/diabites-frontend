@@ -1,45 +1,63 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { User, Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Lock, Mail, User } from 'lucide-react';
 import { Input } from '../components/common/Input';
 import { Button } from '../components/common/Button';
+import { useUser } from '../context/UserContext';
+import { extractErrorMessage } from '../services/api';
 
 const Register = () => {
   const navigate = useNavigate();
+  const { registerAndLogin } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  
   const [formData, setFormData] = useState({
-    name: '', email: '', password: '', confirmPassword: '', agreeTerms: false
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    agreeTerms: false,
   });
 
-  const handleChange = (e) => {
-    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    setFormData({ ...formData, [e.target.name]: value });
+  const handleChange = (event) => {
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    setFormData((current) => ({
+      ...current,
+      [event.target.name]: value,
+    }));
   };
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-    
-    // Validasi Manual
+  const handleRegister = async (event) => {
+    event.preventDefault();
+
     if (formData.password !== formData.confirmPassword) {
-      return toast.error('Password dan Konfirmasi Password tidak cocok!');
-    }
-    if (!formData.agreeTerms) {
-      return toast.error('Anda harus menyetujui Syarat dan Ketentuan!');
+      toast.error('Password dan Konfirmasi Password tidak cocok!');
+      return;
     }
 
-    // Simulasi proses API (Dummy Flow)
+    if (!formData.agreeTerms) {
+      toast.error('Anda harus menyetujui Syarat dan Ketentuan!');
+      return;
+    }
+
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      // Dummy set token ke local storage
-      localStorage.setItem('dummy_token', 'register_token_123');
+
+    try {
+      await registerAndLogin({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+
       toast.success('Pendaftaran berhasil! Mari lengkapi profil Anda.');
-      navigate('/setup-profile');
-    }, 1500);
+      navigate('/setup-profile', { replace: true });
+    } catch (error) {
+      toast.error(extractErrorMessage(error));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -50,30 +68,61 @@ const Register = () => {
       </div>
 
       <form onSubmit={handleRegister} className="flex flex-col gap-4">
-        <Input 
-          name="name" value={formData.name} onChange={handleChange}
-          icon={<User size={20} />} type="text" placeholder="Nama Lengkap" required 
+        <Input
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          icon={<User size={20} />}
+          type="text"
+          placeholder="Nama Lengkap"
+          required
         />
-        <Input 
-          name="email" value={formData.email} onChange={handleChange}
-          icon={<Mail size={20} />} type="email" placeholder="Email" required 
+        <Input
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          icon={<Mail size={20} />}
+          type="email"
+          placeholder="Email"
+          required
         />
-        <Input 
-          name="password" value={formData.password} onChange={handleChange}
-          icon={<Lock size={20} />} type={showPassword ? 'text' : 'password'} placeholder="Password" required 
-          rightIcon={<div onClick={() => setShowPassword(!showPassword)}>{showPassword ? <EyeOff size={20} /> : <Eye size={20} />}</div>}
+        <Input
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          icon={<Lock size={20} />}
+          type={showPassword ? 'text' : 'password'}
+          placeholder="Password"
+          required
+          rightIcon={(
+            <div onClick={() => setShowPassword((current) => !current)}>
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </div>
+          )}
         />
-        <Input 
-          name="confirmPassword" value={formData.confirmPassword} onChange={handleChange}
-          icon={<Lock size={20} />} type={showConfirm ? 'text' : 'password'} placeholder="Konfirmasi Password" required 
-          rightIcon={<div onClick={() => setShowConfirm(!showConfirm)}>{showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}</div>}
+        <Input
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          icon={<Lock size={20} />}
+          type={showConfirm ? 'text' : 'password'}
+          placeholder="Konfirmasi Password"
+          required
+          rightIcon={(
+            <div onClick={() => setShowConfirm((current) => !current)}>
+              {showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
+            </div>
+          )}
         />
-        
+
         <div className="flex items-start gap-2 mt-2">
-          <input 
-            type="checkbox" id="terms" name="agreeTerms" 
-            checked={formData.agreeTerms} onChange={handleChange}
-            className="mt-1 w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500" 
+          <input
+            type="checkbox"
+            id="terms"
+            name="agreeTerms"
+            checked={formData.agreeTerms}
+            onChange={handleChange}
+            className="mt-1 w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500"
           />
           <label htmlFor="terms" className="text-sm text-gray-600">
             Saya setuju dengan <a href="#" className="text-green-600 font-medium hover:underline">Syarat & Ketentuan</a> serta <a href="#" className="text-green-600 font-medium hover:underline">Kebijakan Privasi</a> DiaBites.

@@ -1,35 +1,40 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { Mail, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Lock, Mail } from 'lucide-react';
 import { Input } from '../components/common/Input';
 import { Button } from '../components/common/Button';
+import { useUser } from '../context/UserContext';
+import { extractErrorMessage } from '../services/api';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: '', password: '' });
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (event) => {
+    setFormData((current) => ({
+      ...current,
+      [event.target.name]: event.target.value,
+    }));
+  };
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    
-    // Simulasi API Login
+  const handleLogin = async (event) => {
+    event.preventDefault();
+
     setIsLoading(true);
-    setTimeout(() => {
+
+    try {
+      const result = await login(formData);
+      toast.success('Selamat datang kembali!');
+      navigate(result.me.healthProfile ? '/home' : '/setup-profile', { replace: true });
+    } catch (error) {
+      toast.error(extractErrorMessage(error));
+    } finally {
       setIsLoading(false);
-      
-      // Dummy check sederhana
-      if (formData.email && formData.password) {
-        localStorage.setItem('dummy_token', 'login_token_123');
-        toast.success('Selamat datang kembali!');
-        navigate('/home');
-      } else {
-        toast.error('Email dan Password wajib diisi!');
-      }
-    }, 1500);
+    }
   };
 
   return (
@@ -43,16 +48,30 @@ const Login = () => {
       </div>
 
       <form onSubmit={handleLogin} className="flex flex-col gap-4">
-        <Input 
-          name="email" value={formData.email} onChange={handleChange}
-          icon={<Mail size={20} />} type="email" placeholder="Email" required 
+        <Input
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          icon={<Mail size={20} />}
+          type="email"
+          placeholder="Email"
+          required
         />
-        <Input 
-          name="password" value={formData.password} onChange={handleChange}
-          icon={<Lock size={20} />} type={showPassword ? 'text' : 'password'} placeholder="Password" required 
-          rightIcon={<div onClick={() => setShowPassword(!showPassword)}>{showPassword ? <EyeOff size={20} /> : <Eye size={20} />}</div>}
+        <Input
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          icon={<Lock size={20} />}
+          type={showPassword ? 'text' : 'password'}
+          placeholder="Password"
+          required
+          rightIcon={(
+            <div onClick={() => setShowPassword((current) => !current)}>
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </div>
+          )}
         />
-        
+
         <div className="flex justify-end">
           <a href="#" className="text-sm text-green-600 font-medium hover:underline">Lupa Password?</a>
         </div>

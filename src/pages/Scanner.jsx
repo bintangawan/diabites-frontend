@@ -22,6 +22,12 @@ const isMobileDevice = () => {
   );
 };
 
+const createScanKey = () => (
+  typeof crypto !== "undefined" && crypto.randomUUID
+    ? crypto.randomUUID()
+    : `scan-${Date.now()}-${Math.random().toString(36).slice(2)}`
+);
+
 const Scanner = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
@@ -178,9 +184,10 @@ const Scanner = () => {
   const handleImageCapture = (e) => {
     const file = e.target.files[0];
     if (file) {
+      const previewUrl = URL.createObjectURL(file);
       toast.success("Gambar berhasil diambil! Mengekstraksi gizi...");
       stopCamera();
-      navigate("/scan-result", { state: { image: URL.createObjectURL(file) } });
+      navigate("/scan-result", { state: { file, previewUrl, scanKey: createScanKey() } });
     }
 
     e.target.value = "";
@@ -224,10 +231,14 @@ const Scanner = () => {
           return;
         }
 
+        const capturedFile = new File([blob], `scan-${Date.now()}.jpg`, {
+          type: "image/jpeg",
+        });
+        const previewUrl = URL.createObjectURL(blob);
         toast.success("Gambar berhasil diambil! Mengekstraksi gizi...");
         stopCamera();
         navigate("/scan-result", {
-          state: { image: URL.createObjectURL(blob) },
+          state: { file: capturedFile, previewUrl, scanKey: createScanKey() },
         });
       },
       "image/jpeg",

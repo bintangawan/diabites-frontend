@@ -1,21 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Send, Heart, MessageCircle, Plus, Users, X } from "lucide-react";
-import { Card } from "../components/common/Card";
-import { Button } from "../components/common/Button";
+import { Heart, Loader2, MessageCircle, Plus, Send, Users, X } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { Card } from '../components/common/Card';
+import { Button } from '../components/common/Button';
+import { useUser } from '../context/UserContext';
+import { communityApi, extractErrorMessage } from '../services/api';
+import { toCommunityPostCard } from '../utils/viewModels';
 
 const Community = () => {
   const navigate = useNavigate();
-  const [posts, setPosts] = useState([
-    { id: 1, name: "Budi Santoso", diabetesType: "Type 2", time: "10 mnt lalu", content: "Ada yang punya rekomendasi camilan rendah gula kalau lagi pengen yang manis-manis malam hari?", likes: 12, comments: 4 },
-    { id: 2, name: "Siti Aminah", diabetesType: "Gestasional", time: "1 jam lalu", content: "Hari ini nyoba scan susu almond merk X pakai fitur scanner aplikasi ini, ternyata gulanya lumayan tinggi juga ya. Hati-hati semuanya! 🙌", likes: 24, comments: 8 },
-    { id: 3, name: "Andi Pratama", diabetesType: "Type 1", time: "3 jam lalu", content: "Tetap semangat semuanya! Jaga pola makan, rajin olahraga ringan, dan jangan lupa rutin cek gula darah.", likes: 45, comments: 2 },
-  ]);
-
-  const [newMessage, setNewMessage] = useState("");
+  const { userProfile } = useUser();
+  const [rawPosts, setRawPosts] = useState([]);
+  const [likedPosts, setLikedPosts] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [newMessage, setNewMessage] = useState('');
   const [isComposerOpen, setIsComposerOpen] = useState(false);
-
-  const getInitials = (name) => name.split(" ").map((n) => n[0]).join("").substring(0, 2).toUpperCase();
 
   useEffect(() => {
     if (!isComposerOpen) {
@@ -30,34 +31,88 @@ const Community = () => {
     };
   }, [isComposerOpen]);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadPosts = async () => {
+      setIsLoading(true);
+
+      try {
+        const { items } = await communityApi.getPosts({ page: 1, limit: 50 });
+        if (isMounted) {
+          setRawPosts(items);
+        }
+      } catch (error) {
+        toast.error(extractErrorMessage(error));
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    loadPosts();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const posts = useMemo(() => (
+    rawPosts.map((post) => toCommunityPostCard(post, userProfile))
+  ), [rawPosts, userProfile]);
+
   const openComposer = () => setIsComposerOpen(true);
   const closeComposer = () => setIsComposerOpen(false);
 
-  const handleSend = (e) => {
-    e.preventDefault();
-    if (!newMessage.trim()) return;
-    const newPost = {
-      id: Date.now(),
-      name: "Bintang Kurniawan",
-      diabetesType: "Type 2",
-      time: "Baru saja",
-      content: newMessage,
-      likes: 0,
-      comments: 0,
-    };
-    setPosts((currentPosts) => [newPost, ...currentPosts]);
-    setNewMessage("");
-    closeComposer();
+  const handleSend = async (event) => {
+    event.preventDefault();
+    if (!newMessage.trim()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const createdPost = await communityApi.createPost({ content: newMessage.trim() });
+      setRawPosts((currentPosts) => [createdPost, ...currentPosts]);
+      setNewMessage('');
+      closeComposer();
+      toast.success('Postingan berhasil dibuat!');
+    } catch (error) {
+      toast.error(extractErrorMessage(error));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleGoToDetail = (postId) => {
-    navigate(`/community/${postId}`);
+  const handleToggleLike = async (event, postId) => {
+    event.stopPropagation();
+
+    try {
+      const result = await communityApi.togglePostLike(postId);
+      setLikedPosts((current) => ({
+        ...current,
+        [postId]: result.liked,
+      }));
+      setRawPosts((currentPosts) => currentPosts.map((post) => (
+        post.id === postId
+          ? {
+              ...post,
+              _count: {
+                ...post._count,
+                likes: Math.max((post._count?.likes || 0) + (result.liked ? 1 : -1), 0),
+              },
+            }
+          : post
+      )));
+    } catch (error) {
+      toast.error(extractErrorMessage(error));
+    }
   };
 
   return (
     <div className="flex h-full flex-col bg-slate-50 pb-28">
-      
-      {/* Title Area */}
       <div className="mb-2 bg-white px-6 py-4 shadow-sm">
         <h1 className="text-lg font-bold text-slate-900 flex items-center gap-2">
           <Users size={20} className="text-teal-600" /> Ruang Berbagi
@@ -65,53 +120,61 @@ const Community = () => {
         <p className="text-xs text-slate-500">Komunitas pejuang diabetes</p>
       </div>
 
-      {/* Feed List */}
       <div className="p-6 space-y-4">
-        {posts.map((post) => (
+        {isLoading && (
+          <Card className="text-sm text-slate-500">Memuat postingan komunitas...</Card>
+        )}
+
+        {!isLoading && posts.length === 0 && (
+          <Card className="text-sm text-slate-500">Belum ada postingan di komunitas.</Card>
+        )}
+
+        {!isLoading && posts.map((post) => (
           <Card
             key={post.id}
             noPadding
             className="overflow-hidden cursor-pointer hover:border-teal-300 transition-all hover:shadow-md"
-            onClick={() => handleGoToDetail(post.id)} // Navigasi saat Card diklik
+            onClick={() => navigate(`/community/${post.id}`)}
           >
             <div className="p-4">
               <div className="mb-3 flex items-start gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white text-sm font-bold shrink-0 shadow-sm">
-                  {getInitials(post.name)}
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center overflow-hidden text-white text-sm font-bold shrink-0 shadow-sm">
+                  {post.author.avatarUrl ? (
+                    <img src={post.author.avatarUrl} alt={post.author.name} className="h-full w-full object-cover" />
+                  ) : (
+                    post.author.initials
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-slate-900 text-sm truncate">{post.name}</h3>
+                    <h3 className="font-bold text-slate-900 text-sm truncate">{post.author.name}</h3>
                     <span className="px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-bold rounded-full border border-blue-100 shrink-0">
-                      {post.diabetesType}
+                      {post.author.diabetesTypeLabel}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-400">{post.time}</p>
+                  <p className="text-xs text-slate-400">{post.timeLabel}</p>
                 </div>
               </div>
               <p className="text-sm text-slate-700 leading-relaxed mb-4">
                 {post.content}
               </p>
-              
+
               <div className="flex items-center gap-6 border-t border-slate-100 pt-3 text-slate-500">
-                <button 
-                  className="flex items-center gap-1.5 text-xs font-medium hover:text-rose-600 transition-colors"
-                  onClick={(e) => {
-                    e.stopPropagation(); // Mencegah Card ikut terklik ulang
-                    // Logika like bisa ditambah di sini nanti
-                  }}
+                <button
+                  className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${likedPosts[post.id] ? 'text-rose-600' : 'hover:text-rose-600'}`}
+                  onClick={(event) => handleToggleLike(event, post.id)}
                 >
-                  <Heart size={16} /> {post.likes}
+                  <Heart size={16} fill={likedPosts[post.id] ? 'currentColor' : 'none'} /> {post.likesCount}
                 </button>
-                
-                <button 
+
+                <button
                   className="flex items-center gap-1.5 text-xs font-medium hover:text-teal-600 transition-colors"
-                  onClick={(e) => {
-                    e.stopPropagation(); // Mencegah trigger ganda
-                    handleGoToDetail(post.id); // Langsung arahkan ke detail
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    navigate(`/community/${post.id}`);
                   }}
                 >
-                  <MessageCircle size={16} /> {post.comments} Balasan
+                  <MessageCircle size={16} /> {post.commentsCount} Balasan
                 </button>
               </div>
             </div>
@@ -153,7 +216,7 @@ const Community = () => {
             <form onSubmit={handleSend} className="space-y-4">
               <textarea
                 value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
+                onChange={(event) => setNewMessage(event.target.value)}
                 placeholder="Tuliskan sesuatu yang ingin kamu bagikan..."
                 rows={5}
                 className="w-full resize-none rounded-[22px] border border-slate-200 bg-slate-50/90 px-4 py-3 text-sm text-slate-700 outline-none transition-all focus:border-emerald-400 focus:bg-white focus:ring-4 focus:ring-emerald-100"
@@ -169,8 +232,8 @@ const Community = () => {
                 >
                   Batal
                 </Button>
-                <Button type="submit" fullWidth className="!py-3.5" disabled={!newMessage.trim()}>
-                  <Send size={18} /> Submit
+                <Button type="submit" fullWidth className="!py-3.5" disabled={!newMessage.trim() || isSubmitting}>
+                  {isSubmitting ? <Loader2 className="animate-spin" size={18} /> : <Send size={18} />} Submit
                 </Button>
               </div>
             </form>
