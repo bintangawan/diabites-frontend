@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const DEFAULT_API_BASE_URL = 'http://localhost:3000/api';
+const DEFAULT_API_BASE_URL = 'https://diabitesapi.bintangin.com/api';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || DEFAULT_API_BASE_URL;
 
 const api = axios.create({
@@ -114,7 +114,7 @@ export const getBackendOrigin = () => {
   try {
     return new URL(API_BASE_URL).origin;
   } catch {
-    return 'http://localhost:3000';
+    return 'https://diabitesapi.bintangin.com';
   }
 };
 
