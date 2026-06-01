@@ -11,6 +11,11 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 
+const CAPTURE_IMAGE_TYPE = "image/jpeg";
+const CAPTURE_IMAGE_QUALITY = 0.98;
+const MIN_RECOMMENDED_SHORT_SIDE = 700;
+const MIN_RECOMMENDED_LONG_SIDE = 1200;
+
 const isMobileDevice = () => {
   if (typeof navigator === "undefined") {
     return false;
@@ -27,6 +32,97 @@ const createScanKey = () => (
     ? crypto.randomUUID()
     : `scan-${Date.now()}-${Math.random().toString(36).slice(2)}`
 );
+
+const createVideoConstraints = (facingMode) => ({
+  facingMode: { ideal: facingMode },
+  width: { ideal: 1920 },
+  height: { ideal: 1080 },
+  frameRate: { ideal: 30 },
+  resizeMode: { ideal: "none" },
+});
+
+const getResolutionLabel = ({ width, height } = {}) => (
+  width && height ? ` (${width}x${height})` : ""
+);
+
+const applyCameraQualityHints = async (track) => {
+  const capabilities = track?.getCapabilities?.();
+
+  if (!track || !capabilities) {
+    return;
+  }
+
+  const advanced = [
+    Array.isArray(capabilities.focusMode) && capabilities.focusMode.includes("continuous")
+      ? { focusMode: "continuous" }
+      : null,
+    Array.isArray(capabilities.exposureMode) && capabilities.exposureMode.includes("continuous")
+      ? { exposureMode: "continuous" }
+      : null,
+    Array.isArray(capabilities.whiteBalanceMode) && capabilities.whiteBalanceMode.includes("continuous")
+      ? { whiteBalanceMode: "continuous" }
+      : null,
+  ].filter(Boolean);
+
+  if (!advanced.length) {
+    return;
+  }
+
+  try {
+    await track.applyConstraints({ advanced });
+  } catch {
+    // Some browsers expose capabilities but reject advanced camera hints.
+  }
+};
+
+const readImageDimensions = async (file) => {
+  if (typeof createImageBitmap === "function") {
+    const bitmap = await createImageBitmap(file);
+    const dimensions = {
+      width: bitmap.width,
+      height: bitmap.height,
+    };
+    bitmap.close?.();
+    return dimensions;
+  }
+
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    const objectUrl = URL.createObjectURL(file);
+
+    image.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      resolve({
+        width: image.naturalWidth,
+        height: image.naturalHeight,
+      });
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error("Gagal membaca dimensi gambar"));
+    };
+    image.src = objectUrl;
+  });
+};
+
+const warnIfImageIsSmall = async (file) => {
+  try {
+    const { width, height } = await readImageDimensions(file);
+    const shortSide = Math.min(width, height);
+    const longSide = Math.max(width, height);
+
+    if (
+      shortSide < MIN_RECOMMENDED_SHORT_SIDE ||
+      longSide < MIN_RECOMMENDED_LONG_SIDE
+    ) {
+      toast(
+        "Resolusi gambar cukup kecil. Jika hasil kurang akurat, ambil ulang lebih dekat dan terang.",
+      );
+    }
+  } catch {
+    // Keep upload flow uninterrupted if the browser cannot decode the file.
+  }
+};
 
 const Scanner = () => {
   const navigate = useNavigate();
@@ -76,13 +172,15 @@ const Scanner = () => {
       }
 
       const [track] = stream.getVideoTracks();
+      await applyCameraQualityHints(track);
+
       const settings = track?.getSettings?.() || {};
       const usingEnvironment = settings.facingMode === "environment";
 
       setCameraStatus("ready");
       setCameraError("");
       setCameraLabel(
-        usingEnvironment ? "Kamera belakang aktif" : "Kamera default aktif",
+        `${usingEnvironment ? "Kamera belakang aktif" : "Kamera default aktif"}${getResolutionLabel(settings)}`,
       );
 
       return true;
@@ -105,30 +203,18 @@ const Scanner = () => {
         ? [
             {
               audio: false,
-              video: {
-                facingMode: { ideal: "environment" },
-                width: { ideal: 1280 },
-                height: { ideal: 720 },
-              },
+              video: createVideoConstraints("environment"),
             },
             {
               audio: false,
-              video: {
-                facingMode: { ideal: "user" },
-                width: { ideal: 1280 },
-                height: { ideal: 720 },
-              },
+              video: createVideoConstraints("user"),
             },
             { audio: false, video: true },
           ]
         : [
             {
               audio: false,
-              video: {
-                facingMode: "user",
-                width: { ideal: 1280 },
-                height: { ideal: 720 },
-              },
+              video: createVideoConstraints("user"),
             },
             { audio: false, video: true },
           ];
@@ -181,9 +267,11 @@ const Scanner = () => {
     fileInputRef.current?.click();
   };
 
-  const handleImageCapture = (e) => {
+  const handleImageCapture = async (e) => {
     const file = e.target.files[0];
     if (file) {
+      await warnIfImageIsSmall(file);
+
       const previewUrl = URL.createObjectURL(file);
       toast.success("Gambar berhasil diambil! Mengekstraksi gizi...");
       stopCamera();
@@ -241,8 +329,8 @@ const Scanner = () => {
           state: { file: capturedFile, previewUrl, scanKey: createScanKey() },
         });
       },
-      "image/jpeg",
-      0.95,
+      CAPTURE_IMAGE_TYPE,
+      CAPTURE_IMAGE_QUALITY,
     );
   };
 
@@ -452,7 +540,6 @@ const Scanner = () => {
         ref={fileInputRef}
         onChange={handleImageCapture}
         accept="image/*"
-        capture={prefersEnvironmentCamera ? "environment" : "user"}
         className="hidden"
       />
       <canvas ref={canvasRef} className="hidden" />

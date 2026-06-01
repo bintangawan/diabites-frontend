@@ -58,7 +58,9 @@ const Home = () => {
   useEffect(() => {
     const isMountedRef = { current: true };
 
-    loadTodayTotals(isMountedRef);
+    Promise.resolve().then(() => {
+      loadTodayTotals(isMountedRef);
+    });
 
     const handleDataRefresh = async () => {
       try {
